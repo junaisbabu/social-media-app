@@ -1,178 +1,78 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState, useTransition } from "react";
-import {
-  RecaptchaVerifier,
-  ConfirmationResult,
-  signInWithPhoneNumber,
-} from "firebase/auth";
-import { useRouter } from "next/navigation";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "../ui/input-otp";
-import { Input } from "../ui/input";
+import { auth, googleAuthProvider } from "@/firebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Button } from "../ui/button";
-import { auth } from "@/firebase";
+import GoogleLogo from "@/public/assets/google.svg";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useToast } from "../ui/use-toast";
 
-function SignIn() {
+const SignIn = () => {
   const router = useRouter();
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [resendCountdown, setResendCountdown] = useState(0);
+  const { toast } = useToast();
 
-  const [recaptchaVerifier, setRecaptchaVerifier] =
-    useState<RecaptchaVerifier | null>(null);
-
-  const [confirmationResult, setConformationResult] =
-    useState<ConfirmationResult | null>(null);
-
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (resendCountdown > 0) {
-      timer = setTimeout(() => setResendCountdown(resendCountdown - 1), 1000);
-    }
-
-    return () => clearTimeout(timer);
-  }, [resendCountdown]);
-
-  useEffect(() => {
-    const recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      "recaptcha-container",
-      { size: "invisible" }
-    );
-
-    setRecaptchaVerifier(recaptchaVerifier);
-
-    return () => recaptchaVerifier.clear();
-  }, [auth]);
-
-  useEffect(() => {
-    const hasEnteredAllDigits = otp.length === 6;
-    if (hasEnteredAllDigits) {
-      verifyOtp();
-    }
-  }, [otp]);
-
-  const verifyOtp = async () => {
-    startTransition(async () => {
-      setError("");
-
-      if (!confirmationResult) {
-        setError("Please request OTP first.");
-        return;
-      }
-
-      try {
-        await confirmationResult?.confirm(otp);
-        router.replace("/");
-      } catch (error) {
-        console.log(error);
-        setError("Failed to verify OTP. Please check the OTP.");
-      }
+  const showToast = (description: string) => {
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description,
     });
   };
 
-  const requestOtp = async (e?: FormEvent<HTMLFormElement>) => {
-    e?.preventDefault();
+  // Handle user sign up with google
+  const handleGoogleSignUp = async (e: any) => {
+    e.preventDefault();
 
-    setResendCountdown(60);
+    signInWithPopup(auth, googleAuthProvider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
 
-    startTransition(async () => {
-      setError("");
+        router.push("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-      if (!recaptchaVerifier) {
-        return setError("RecaptchaVerifier is not initialized.");
-      }
+        const email = error.customData.email;
 
-      try {
-        const confirmationResult = await signInWithPhoneNumber(
-          auth,
-          phoneNumber,
-          recaptchaVerifier
-        );
-        setConformationResult(confirmationResult);
-        setSuccess("OTP sent successfully.");
-      } catch (err: any) {
-        console.log(err);
-        setResendCountdown(0);
-
-        if (err.code === "auth/inva fid-phone-number") {
-          setError("Invalid phone number. Please check the number.");
-        } else if (err.code === "auth/too-many-requests") {
-          setError("Too many requests. Please try again later.");
-        } else {
-          setError("Failed to send OTP. Please try again.");
+        switch (errorCode) {
+          case "auth/operation-not-allowed":
+            showToast("Email/password accounts are not enabled.");
+            break;
+          case "auth/operation-not-supported-in-this-environment":
+            showToast("HTTP protocol is not supported. Please use HTTPS.");
+            break;
+          case "auth/popup-blocked":
+            showToast(
+              "Popup has been blocked by the browser. Please allow popups for this website."
+            );
+            break;
+          case "auth/popup-closed-by-user":
+            showToast(
+              "Popup has been closed by the user before finalizing the operation. Please try again."
+            );
+            break;
+          default:
+            showToast(errorMessage);
+            break;
         }
-      }
-    });
+      });
   };
 
   return (
-    <div>
-      {!confirmationResult && (
-        <form className="w-full space-y-6">
-          <h1 className="text-2xl">Hi, Welcome Back! 👋</h1>
-          <div>
-            <Input
-              className="• text-black"
-              type="tel"
-              placeholder="+91"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-            <p className="text-xs text-gray-400 mt-2">
-              Please enter your number with the country code (i.e. +91 for IN){" "}
-            </p>
-          </div>
-        </form>
-      )}
-
-      {confirmationResult && (
-        <InputOTP maxLength={6} value={otp} onChange={(value) => setOtp(value)}>
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
-        </InputOTP>
-      )}
-
-      <Button
-        disabled={!phoneNumber || isPending || resendCountdown > 0}
-        onClick={() => requestOtp()}
-        className="mt-5"
-      >
-        {resendCountdown > 0
-          ? `Resend OTP in ${resendCountdown}`
-          : isPending
-          ? "Sending OTP"
-          : "Send OTP"}
-      </Button>
-
-      <div className="p-10 text-center">
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
+    <div className="signupContainer">
+      <div className="signupContainer__box__google">
+        <Button className="space-x-2" onClick={handleGoogleSignUp}>
+          <Image src={GoogleLogo} alt="google" width={24} height={24} />
+          <span>Continue with Google</span>
+        </Button>
       </div>
-
-      <div id="recaptcha-container" />
-
-      {isPending && "Loading..."}
     </div>
   );
-}
+};
+
 export default SignIn;
