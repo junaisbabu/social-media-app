@@ -1,12 +1,12 @@
 "use client";
 
-import { useStore } from "@/components/auth/auth-state";
+import { useAuthStore } from "@/components/auth/auth-state";
 import { Button } from "@/components/ui/button";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
 export default function Home() {
-  const { user } = useStore();
+  const { user } = useAuthStore();
 
   return (
     <main className="min-h-screen">

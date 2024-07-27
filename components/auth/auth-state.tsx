@@ -13,7 +13,7 @@ interface AuthState {
   setUser: (user: UserType) => void;
 }
 
-const useStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set) => ({
   user: null,
   setUser: (user) => set({ user }),
 }));
@@ -21,7 +21,7 @@ const useStore = create<AuthState>((set) => ({
 function AuthState() {
   const router = useRouter();
 
-  const { setUser } = useStore();
+  const { setUser } = useAuthStore();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,4 +43,4 @@ function AuthState() {
 
 export default AuthState;
 
-export { useStore };
+export { useAuthStore };
