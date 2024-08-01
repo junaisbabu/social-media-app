@@ -61,8 +61,8 @@ export function SignUp() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <h1 className="text-2xl">Create an Account</h1>
-        <span className="text-xs text-black text-opacity-50">
+        <h1>Create an Account</h1>
+        <span className="text-black text-opacity-50">
           Connect with your friends today!
         </span>
         <FormField
