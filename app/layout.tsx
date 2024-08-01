@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(poppins.className, "bg-[#F6F6F6]")}>
+      <body className={cn(poppins.className, "bg-[#f4f5f8]")}>
         {children}
         <AuthState />
         <Toaster />
