@@ -59,6 +59,10 @@
   }
 }
 
+body {
+  @apply text-base;
+}
+
 @layer base {
   * {
     @apply border-border;
