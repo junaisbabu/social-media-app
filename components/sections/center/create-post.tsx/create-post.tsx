@@ -10,7 +10,7 @@ function CreatePost() {
   const { user } = useAuthStore();
 
   return (
-    <div className="p-4 bg-white rounded-lg space-y-4">
+    <div className="p-3 bg-white rounded-xl space-y-4">
       <div className="flex items-center gap-2">
         <Avatar className="w-8 h-8 rounded-xl">
           <AvatarImage
