@@ -15,7 +15,7 @@ function Header() {
   const { user } = useAuthStore();
 
   return (
-    <header className="h-14 flex justify-between items-center px-6 bg-white">
+    <header className="h-14 flex shrink-0 justify-between items-center px-6 bg-white">
       <div>
         <h1 className="font-semibold">Socialo</h1>
       </div>
