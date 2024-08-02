@@ -11,7 +11,7 @@ function StoryItem() {
         <AvatarImage src="https://github.com/shadcn.png" alt="story" />
       </Avatar>
 
-      <span className="font-medium absolute -translate-x-1/2 left-1/2 bottom-4 text-white">
+      <span className="w-full text-center font-medium absolute -translate-x-1/2 left-1/2 bottom-4 text-white">
         Sam Brown
       </span>
     </div>
