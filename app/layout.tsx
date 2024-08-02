@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Alata } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import AuthState from "@/components/auth/auth-state";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
-const alata = Alata({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -22,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(alata.className, "bg-[#f4f5f8]")}>
+      <body
+        className={cn(poppins.className, "bg-[#f4f5f8]")}
+      >
         {children}
         <AuthState />
         <Toaster />
