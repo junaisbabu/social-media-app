@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(poppins.className, "bg-[#f4f5f8]")}
+        className={cn(poppins.className, "bg-[#f4f5f8] h-dvh overflow-hidden")}
       >
         {children}
         <AuthState />
