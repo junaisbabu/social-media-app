@@ -14,7 +14,7 @@ function PostCard() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
-            <Avatar className="w-8 h-8 rounded-xl">
+            <Avatar className="w-9 h-9 rounded-xl">
               <AvatarImage
                 src="https://github.com/shadcn.png"
                 alt="Anonymous"

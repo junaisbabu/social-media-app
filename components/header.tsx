@@ -34,7 +34,7 @@ function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex items-center gap-2">
-              <Avatar className="w-8 h-8 rounded-xl">
+              <Avatar className="w-9 h-9 rounded-xl">
                 <AvatarImage
                   src={user?.photoURL || "https://github.com/shadcn.png"}
                   alt={user?.displayName || "Anonymous"}
