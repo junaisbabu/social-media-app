@@ -19,7 +19,7 @@ function CreatePost() {
           />
         </Avatar>
         <div className="relative flex-1">
-          <ImagePlus className="absolute top-2 right-2" size={24} />
+          <ImagePlus className="absolute top-2.5 right-2" size={20} />
           <Input
             className="w-9 h-9 absolute right-0 opacity-0"
             type="file"
