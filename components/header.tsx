@@ -15,20 +15,23 @@ function Header() {
   const { user } = useAuthStore();
 
   return (
-    <header className="h-14 flex shrink-0 justify-between items-center px-6 bg-white">
+    <header className="h-16 flex shrink-0 justify-between items-center px-6 bg-white">
       <div>
         <h1 className="font-semibold">Socialo</h1>
       </div>
       <div className="flex items-center gap-2">
         <div className="relative mr-2">
-          <Search className="absolute top-2 left-2 text-slate-500" size={16} />
+          <Search
+            className="absolute top-2.5 left-2 text-slate-500"
+            size={16}
+          />
           <Input
             className="bg-[#f4f5f8] rounded-xl pl-8"
             type="text"
             placeholder="Search"
           />
         </div>
-        <Button className="h-8 rounded-xl flex gap-1">
+        <Button className="rounded-xl flex gap-1">
           <SquarePlus size={16} /> Create
         </Button>
         <DropdownMenu>
