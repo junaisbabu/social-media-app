@@ -28,7 +28,7 @@ function PostCard() {
           <Ellipsis className="h-4 px-1 border rounded text-zinc-400" />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6 pt-0">
         <div className="space-y-3">
           <p className="leading-6">
             Hello World! Hello World! Hello World! Hello World! Hello World!

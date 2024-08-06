@@ -10,7 +10,7 @@ function MyInfo() {
 
   return (
     <Card className="overflow-hidden">
-      <CardContent className="pt-4 bg-white">
+      <CardContent className="p-6 bg-white">
         <div className="flex items-center gap-3">
           <Avatar className="w-9 h-9 rounded-xl">
             <AvatarImage
