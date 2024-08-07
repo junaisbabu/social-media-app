@@ -10,9 +10,15 @@ import {
 import { Button } from "./ui/button";
 import { Search, SquarePlus } from "lucide-react";
 import { Input } from "./ui/input";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 
 function Header() {
   const { user } = useAuthStore();
+
+  const handleSignOut = () => {
+    signOut(auth);
+  };
 
   return (
     <header className="h-16 flex shrink-0 justify-between items-center px-6 bg-white">
@@ -47,7 +53,9 @@ function Header() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>View Profile</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500">Logout</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-500" onClick={handleSignOut}>
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
