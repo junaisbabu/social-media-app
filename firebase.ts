@@ -5,6 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getAuth } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -23,8 +24,10 @@ const app = getApps.length === 0 ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 auth.useDeviceLanguage();
 
+const db = getFirestore(app);
+
 const analytics = getAnalytics(app);
 
 const googleAuthProvider = new GoogleAuthProvider();
 
-export { auth, googleAuthProvider };
+export { auth, googleAuthProvider, db };
