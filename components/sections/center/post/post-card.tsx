@@ -5,7 +5,21 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Ellipsis, Heart, MessageCircle, Share2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Bookmark,
+  Ellipsis,
+  Heart,
+  MessageCircle,
+  Pencil,
+  Share2,
+  Trash2,
+} from "lucide-react";
 import React from "react";
 
 function PostCard() {
@@ -25,7 +39,22 @@ function PostCard() {
               <span className="text-[10px] text-zinc-400">12 hours ago</span>
             </div>
           </div>
-          <Ellipsis className="h-4 px-1 border rounded text-zinc-400" />
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Ellipsis className="h-4 px-1 border rounded text-zinc-400" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
+                <Pencil size={12} /> Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
+                <Bookmark size={12} /> Save
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center">
+                <Trash2 size={12} /> Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent className="p-6 pt-0">
