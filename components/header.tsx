@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 import { Search, SquarePlus } from "lucide-react";
 import { Input } from "./ui/input";
 import { signOut } from "firebase/auth";
-import { auth } from "@/firebase";
+import { auth } from "@/firebase/firebase";
 
 function Header() {
   const { user } = useAuthStore();

@@ -1,6 +1,6 @@
 "use client";
 
-import { auth, googleAuthProvider } from "@/firebase";
+import { auth, googleAuthProvider } from "@/firebase/firebase";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -13,7 +13,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/firebase/firebase";
 
 const SignIn = () => {
   const router = useRouter();
