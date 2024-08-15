@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
@@ -11,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PostType, UserType } from "@/type";
 import {
   Bookmark,
   Ellipsis,
@@ -20,22 +23,38 @@ import {
   Share2,
   Trash2,
 } from "lucide-react";
-import React from "react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { firestoreService } from "@/firebase/firestore";
+import { Collections } from "@/firebase/collections";
 
-function PostCard() {
+function PostCard({ post }: { post: PostType }) {
+  const [user, setUser] = useState<UserType>();
+  const { uid, text, file, date } = post;
+
+  const getUser = async () => {
+    const userData = await firestoreService.getDoc(Collections.USERS, uid);
+    if (userData.exists()) {
+      setUser(userData.data() as UserType);
+    } else {
+      console.log("No data available");
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
             <Avatar className="w-9 h-9 rounded-xl">
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                alt="Anonymous"
-              />
+              <AvatarImage src={user?.image} alt={user?.name} />
             </Avatar>
             <div className="flex flex-col">
-              <h1 className="font-medium">Sam Brown</h1>
+              <h1 className="font-medium">{user?.name}</h1>
               <span className="text-[10px] text-zinc-400">12 hours ago</span>
             </div>
           </div>
@@ -59,12 +78,12 @@ function PostCard() {
       </CardHeader>
       <CardContent className="p-6 pt-0">
         <div className="space-y-3">
-          <p className="leading-6">
-            Hello World! Hello World! Hello World! Hello World! Hello World!
-            Hello World! Hello World! Hello World! Hello World! Hello World!
-            Hello World!
-          </p>
-          <div className="w-full min-h-80 max-h-96 bg-blue-200 rounded-xl overflow-hidden"></div>
+          <p className="leading-6">{text}</p>
+          {file && (
+            <div className="w-full min-h-80 max-h-96 rounded-xl overflow-hidden relative">
+              <Image src={file} alt={text} objectFit="contain" fill />
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter className="flex justify-around items-center">
