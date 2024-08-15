@@ -51,7 +51,7 @@ function CreatePost() {
       uid: user?.uid,
       text: data?.text || "",
       file: url || null,
-      date: new Date(),
+      date: new Date().toISOString(),
     };
 
     try {
