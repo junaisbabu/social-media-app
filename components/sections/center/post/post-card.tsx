@@ -27,6 +27,10 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 function PostCard({ post }: { post: PostType }) {
   const [user, setUser] = useState<UserType>();
@@ -55,7 +59,9 @@ function PostCard({ post }: { post: PostType }) {
             </Avatar>
             <div className="flex flex-col">
               <h1 className="font-medium">{user?.name}</h1>
-              <span className="text-[10px] text-zinc-400">12 hours ago</span>
+              <span className="text-[10px] text-zinc-400">
+                {dayjs(date).fromNow()}
+              </span>
             </div>
           </div>
           <DropdownMenu>
