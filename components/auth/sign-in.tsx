@@ -12,8 +12,8 @@ import GoogleLogo from "@/public/assets/google.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
+import { firestoreService } from "@/firebase/firestore";
+import { Collections } from "@/firebase/collections";
 
 const SignIn = () => {
   const router = useRouter();
@@ -30,19 +30,15 @@ const SignIn = () => {
 
   const handleNewUser = async (user: User) => {
     const { displayName, email, phoneNumber, photoURL, uid } = user;
-    try {
-      const docRef = doc(collection(db, "people"), uid);
+    const userData = {
+      uid,
+      email,
+      name: displayName,
+      phone_no: phoneNumber,
+      image: photoURL,
+    };
 
-      await setDoc(docRef, {
-        uid,
-        email,
-        name: displayName,
-        phone_no: phoneNumber,
-        image: photoURL,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    firestoreService.setDoc(Collections.USERS, uid, userData);
   };
 
   // Handle user sign up with google
