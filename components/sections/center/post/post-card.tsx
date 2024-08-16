@@ -31,6 +31,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuthStore } from "@/components/auth/auth-state";
+import { storageService } from "@/firebase/storage";
 
 dayjs.extend(relativeTime);
 
@@ -68,6 +69,23 @@ function PostCard({ post }: { post: PostType }) {
     }
   };
 
+  const deletePost = () => {
+    firestoreService.deleteDoc(Collections.POSTS, docId);
+
+    firestoreService.updateDoc(Collections.MY_POSTS, uid, {
+      posts: arrayRemove(docId),
+    });
+
+    if (file) {
+      const urlObject = new URL(file);
+      let fileName = urlObject.pathname.split("/").pop() || "";
+      fileName = decodeURIComponent(fileName);
+
+      if (!fileName) return;
+      storageService.deleteFile(fileName);
+    }
+  };
+
   useEffect(() => {
     getUser();
   }, []);
@@ -98,9 +116,15 @@ function PostCard({ post }: { post: PostType }) {
               <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
                 <Bookmark size={12} /> Save
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center">
+
+              {user?.uid === uid && (
+                <DropdownMenuItem
+                  className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center"
+                  onClick={deletePost}
+                >
                 <Trash2 size={12} /> Delete
               </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
