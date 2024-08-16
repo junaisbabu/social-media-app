@@ -29,10 +29,13 @@ import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { useAuthStore } from "@/components/auth/auth-state";
 
 dayjs.extend(relativeTime);
 
 function PostCard({ post }: { post: PostType }) {
+  const { user } = useAuthStore();
   const [postedUser, setPostedUser] = useState<UserType>();
   const { uid, text, file, date, docId, likes } = post;
 
@@ -42,6 +45,26 @@ function PostCard({ post }: { post: PostType }) {
       setPostedUser(userData.data() as UserType);
     } else {
       console.log("No data available");
+    }
+  };
+
+  const isLiked = () => {
+    if (!user?.uid) return false;
+
+    return likes.includes(user.uid);
+  };
+
+  const likePost = async () => {
+    if (!user?.uid) return null;
+
+    if (isLiked()) {
+      return await firestoreService.updateDoc(Collections.POSTS, docId, {
+        likes: arrayRemove(user.uid),
+      });
+    } else {
+      return await firestoreService.updateDoc(Collections.POSTS, docId, {
+        likes: arrayUnion(user.uid),
+      });
     }
   };
 
@@ -93,9 +116,16 @@ function PostCard({ post }: { post: PostType }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-around items-center">
-        <div className="flex gap-1 items-center">
-          <Heart size={20} />
-          <span className="text-zinc-400">517</span>
+        <div
+          className="flex gap-1 items-center cursor-pointer"
+          onClick={likePost}
+        >
+          <Heart
+            size={20}
+            fill={isLiked() ? "#E31B23" : "#ffffff"}
+            stroke={isLiked() ? "#E31B23" : "#000"}
+          />
+          <span className="text-zinc-400">{post.likes.length}</span>
         </div>
 
         <div className="flex gap-1 items-center">
