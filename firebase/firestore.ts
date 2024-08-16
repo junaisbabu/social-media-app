@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -48,6 +49,11 @@ class FirestoreService {
   ) => {
     const docRef = this.getDocRef(col, docId);
     return await updateDoc(docRef, data);
+  };
+
+  deleteDoc = async (col: string, docId: string) => {
+    const docRef = this.getDocRef(col, docId);
+    await deleteDoc(docRef);
   };
 }
 
