@@ -52,6 +52,7 @@ function CreatePost() {
       text: data?.text || "",
       file: url || null,
       date: new Date().toISOString(),
+      likes: [],
     };
 
     try {
