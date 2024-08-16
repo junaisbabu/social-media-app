@@ -33,13 +33,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 function PostCard({ post }: { post: PostType }) {
-  const [user, setUser] = useState<UserType>();
-  const { uid, text, file, date } = post;
+  const [postedUser, setPostedUser] = useState<UserType>();
+  const { uid, text, file, date, docId, likes } = post;
 
   const getUser = async () => {
     const userData = await firestoreService.getDoc(Collections.USERS, uid);
     if (userData.exists()) {
-      setUser(userData.data() as UserType);
+      setPostedUser(userData.data() as UserType);
     } else {
       console.log("No data available");
     }
@@ -55,10 +55,10 @@ function PostCard({ post }: { post: PostType }) {
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
             <Avatar className="w-9 h-9 rounded-xl">
-              <AvatarImage src={user?.image} alt={user?.name} />
+              <AvatarImage src={postedUser?.image} alt={postedUser?.name} />
             </Avatar>
             <div className="flex flex-col">
-              <h1 className="font-medium">{user?.name}</h1>
+              <h1 className="font-medium">{postedUser?.name}</h1>
               <span className="text-[10px] text-zinc-400">
                 {dayjs(date).fromNow()}
               </span>
