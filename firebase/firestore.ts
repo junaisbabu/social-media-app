@@ -19,6 +19,10 @@ class FirestoreService {
     return doc(collection(db, col), docId); // return: docRef
   };
 
+  getCollectionRef = (col: string) => {
+    return collection(db, col); // return: collectionRef
+  };
+
   getDoc = async (col: string, docId: string) => {
     const docRef = this.getDocRef(col, docId);
     return await getDoc(docRef); // return: docSnap
