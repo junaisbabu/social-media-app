@@ -1,28 +1,35 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import PostCard from "./post-card";
 import { PostType } from "@/type";
+import { query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 
 function PostList() {
   const [posts, setPosts] = useState<PostType[]>([]);
 
-  const getPosts = async () => {
-    const postsSnap = await firestoreService.getDocs(Collections.POSTS);
-    const postsData = postsSnap.docs.map((doc) => doc.data());
-    if (postsData.length) {
-      setPosts(postsData as PostType[]);
-    }
-  };
-
   useEffect(() => {
-    getPosts();
+    const postsRef = firestoreService.getCollectionRef(Collections.POSTS);
+    const q = query(postsRef, orderBy("date", "desc"), limit(20));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const postsData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        docId: doc.id,
+      })) as PostType[];
+
+      setPosts(postsData);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
     <div className="space-y-4">
       {posts?.map((post: PostType) => (
-        <PostCard key={`${post.date}`} post={post} />
+        <PostCard key={post.docId} post={post} />
       ))}
     </div>
   );
