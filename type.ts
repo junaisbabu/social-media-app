@@ -11,4 +11,6 @@ export type PostType = {
   text: string;
   file: string | null;
   date: Date;
+  docId: string;
+  likes: string[];
 };
