@@ -32,7 +32,7 @@ function Header() {
             size={16}
           />
           <Input
-            className="bg-[#f4f5f8] rounded-xl pl-8"
+            className="bg-input rounded-xl pl-8"
             type="text"
             placeholder="Search"
           />
