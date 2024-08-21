@@ -13,4 +13,5 @@ export type PostType = {
   date: Date;
   docId: string;
   likes: string[];
+  modify_at: string;
 };
