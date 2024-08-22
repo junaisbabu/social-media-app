@@ -33,6 +33,7 @@ import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { EditPost } from "./edit-post";
+import { deleteStorageFile } from "@/utils/delete-storage-file";
 
 dayjs.extend(relativeTime);
 
@@ -77,14 +78,7 @@ function PostCard({ post }: { post: PostType }) {
       posts: arrayRemove(docId),
     });
 
-    if (file) {
-      const urlObject = new URL(file);
-      let fileName = urlObject.pathname.split("/").pop() || "";
-      fileName = decodeURIComponent(fileName);
-
-      if (!fileName) return;
-      storageService.deleteFile(fileName);
-    }
+    deleteStorageFile(file);
   };
 
   useEffect(() => {
