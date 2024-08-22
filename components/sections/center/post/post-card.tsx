@@ -31,7 +31,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuthStore } from "@/components/auth/auth-state";
-import { storageService } from "@/firebase/storage";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { EditPost } from "./edit-post";
 
 dayjs.extend(relativeTime);
 
@@ -110,9 +111,16 @@ function PostCard({ post }: { post: PostType }) {
               <Ellipsis className="h-4 px-1 border rounded text-zinc-400" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
+              {user?.uid === uid && (
+                <div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                  <EditPost post={post}>
+                    <DialogTrigger className="grid grid-cols-[12px_1fr] gap-1 items-center w-full place-items-start">
                 <Pencil size={12} /> Edit
-              </DropdownMenuItem>
+                    </DialogTrigger>
+                  </EditPost>
+                </div>
+              )}
+
               <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
                 <Bookmark size={12} /> Save
               </DropdownMenuItem>
