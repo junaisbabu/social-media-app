@@ -5,7 +5,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -29,6 +29,8 @@ const createPostSchema = z.object({
 });
 
 function CreatePost() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { user } = useAuthStore();
   const { toast } = useToast();
 
@@ -50,21 +52,22 @@ function CreatePost() {
       });
     }
 
-    const url = await storageService.getDownloadFileURL(data?.file);
+    if (!user?.uid) {
+      return;
+    }
 
-    const newPost = {
-      uid: user?.uid,
-      text: data?.text || "",
-      file: url || null,
-      date: new Date().toISOString(),
-      likes: [],
-    };
+    setIsLoading(true);
 
     try {
-      if (!user?.uid) {
-        console.error("User is not logged in");
-        return;
-      }
+      const url = await storageService.getDownloadFileURL(data?.file);
+
+      const newPost = {
+        uid: user?.uid,
+        text: data?.text || "",
+        file: url || null,
+        date: new Date().toISOString(),
+        likes: [],
+      };
 
       const newPostDocRef = await firestoreService.addDoc(
         Collections.POSTS,
@@ -92,6 +95,8 @@ function CreatePost() {
     } catch (e) {
       console.error("Error sharing post: ", e);
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -167,7 +172,12 @@ function CreatePost() {
             </div>
           )}
 
-          <Button className="rounded-xl" type="submit">
+          <Button
+            className="rounded-xl min-w-[87px]"
+            type="submit"
+            disabled={isLoading}
+            isLoading={isLoading}
+          >
             Share Post
           </Button>
         </form>
