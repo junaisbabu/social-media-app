@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
 import React from "react";
