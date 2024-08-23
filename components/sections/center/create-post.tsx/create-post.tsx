@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import React, { ChangeEvent } from "react";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import { arrayUnion } from "firebase/firestore";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import { storageService } from "@/firebase/storage";
+import Image from "next/image";
 
 type CreatePostValues = {
   text: string;
@@ -38,6 +39,8 @@ function CreatePost() {
     },
     // resolver: zodResolver(createPostSchema),
   });
+
+  const file = form.watch("file");
 
   const onSubmit: SubmitHandler<CreatePostValues> = async (data) => {
     if (!data.text && !data.file) {
@@ -105,28 +108,31 @@ function CreatePost() {
             />
           </Avatar>
           <div className="relative flex-1">
-            <ImagePlus className="absolute top-2.5 right-2" size={20} />
-            <FormField
-              control={form.control}
-              name="file"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className="w-9 h-9 absolute right-0 opacity-0"
-                      type="file"
-                      accept="image/*"
-                      multiple={false}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            {!file && (
+              <>
+                <ImagePlus className="absolute top-2.5 right-2" size={20} />
+                <FormField
+                  control={form.control}
+                  name="file"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          className="w-9 h-9 absolute right-0 opacity-0"
+                          type="file"
+                          accept="image/*"
+                          multiple={false}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         const file = e.target.files ? e.target.files[0] : null;
-                        field.onChange(file);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
+                            field.onChange(file);
+                          }}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
             <FormField
               control={form.control}
               name="text"
@@ -143,6 +149,23 @@ function CreatePost() {
               )}
             />
           </div>
+
+          {file && (
+            <div className="w-9 h-9 relative rounded-lg overflow-hidden hover:bg-red-500 group">
+              <div
+                className="text-white hidden group-hover:flex cursor-pointer w-full h-full items-center justify-center"
+                onClick={() => form.setValue("file", null)}
+              >
+                <Trash2 />
+              </div>
+              <Image
+                className="object-contain group-hover:hidden"
+                src={URL.createObjectURL(file as Blob)}
+                alt={file.name}
+                fill
+              />
+            </div>
+          )}
 
           <Button className="rounded-xl" type="submit">
             Share Post
