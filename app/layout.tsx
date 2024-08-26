@@ -4,6 +4,9 @@ import "./globals.css";
 import AuthState from "@/components/auth/auth-state";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import Header from "@/components/header";
+import LeftSection from "@/components/sections/left/left";
+import RightSection from "@/components/sections/right/right";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,7 +28,14 @@ export default function RootLayout({
       <body
         className={cn(poppins.className, "bg-[#f4f5f8] h-dvh overflow-hidden")}
       >
-        {children}
+        <main className="h-full flex flex-col">
+          <Header />
+          <div className="h-full flex shrink-0 flex-1 gap-6 p-6">
+            <LeftSection />
+            {children}
+            <RightSection />
+          </div>
+        </main>
         <AuthState />
         <Toaster />
       </body>
