@@ -71,6 +71,32 @@ function PostCard({ post }: { post: PostType }) {
     }
   };
 
+  const isSaved = () => {
+    return true;
+  };
+
+  const savePost = async () => {
+    if (!user?.uid) return null;
+
+    const savedPost = await firestoreService.getDoc(
+      Collections.SAVED_POSTS,
+      user.uid
+    );
+    if (savedPost.exists()) {
+      return await firestoreService.updateDoc(
+        Collections.SAVED_POSTS,
+        user.uid,
+        {
+          posts: arrayUnion(docId),
+        }
+      );
+    } else {
+      await firestoreService.setDoc(Collections.SAVED_POSTS, user.uid, {
+        posts: [docId],
+      });
+    }
+  };
+
   const deletePost = () => {
     firestoreService.deleteDoc(Collections.POSTS, docId);
 
@@ -109,13 +135,16 @@ function PostCard({ post }: { post: PostType }) {
                 <div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                   <EditPost post={post}>
                     <DialogTrigger className="grid grid-cols-[12px_1fr] gap-1 items-center w-full place-items-start">
-                <Pencil size={12} /> Edit
+                      <Pencil size={12} /> Edit
                     </DialogTrigger>
                   </EditPost>
                 </div>
               )}
 
-              <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
+              <DropdownMenuItem
+                className="grid grid-cols-[12px_1fr] gap-1 items-center"
+                onClick={savePost}
+              >
                 <Bookmark size={12} /> Save
               </DropdownMenuItem>
 
@@ -124,8 +153,8 @@ function PostCard({ post }: { post: PostType }) {
                   className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center"
                   onClick={deletePost}
                 >
-                <Trash2 size={12} /> Delete
-              </DropdownMenuItem>
+                  <Trash2 size={12} /> Delete
+                </DropdownMenuItem>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
