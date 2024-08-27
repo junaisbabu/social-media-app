@@ -16,6 +16,7 @@ import {
 import { PostType, UserType } from "@/type";
 import {
   Bookmark,
+  BookmarkX,
   Ellipsis,
   Heart,
   MessageCircle,
@@ -40,6 +41,7 @@ dayjs.extend(relativeTime);
 function PostCard({ post }: { post: PostType }) {
   const { user } = useAuthStore();
   const [postedUser, setPostedUser] = useState<UserType>();
+  const [isSaved, setIsSaved] = useState();
   const { uid, text, file, date, docId, likes } = post;
 
   const getUser = async () => {
@@ -71,8 +73,19 @@ function PostCard({ post }: { post: PostType }) {
     }
   };
 
-  const isSaved = () => {
-    return true;
+  const isSavedPost = async () => {
+    if (!user?.uid) return null;
+
+    const savedPost = await firestoreService.getDoc(
+      Collections.SAVED_POSTS,
+      user.uid
+    );
+
+    if (savedPost.exists()) {
+      return setIsSaved(savedPost.data().posts.includes(docId));
+    }
+
+    return;
   };
 
   const savePost = async () => {
@@ -83,13 +96,23 @@ function PostCard({ post }: { post: PostType }) {
       user.uid
     );
     if (savedPost.exists()) {
-      return await firestoreService.updateDoc(
-        Collections.SAVED_POSTS,
-        user.uid,
-        {
-          posts: arrayUnion(docId),
-        }
-      );
+      if (isSaved) {
+        return await firestoreService.updateDoc(
+          Collections.SAVED_POSTS,
+          user.uid,
+          {
+            posts: arrayRemove(docId),
+          }
+        );
+      } else {
+        return await firestoreService.updateDoc(
+          Collections.SAVED_POSTS,
+          user.uid,
+          {
+            posts: arrayUnion(docId),
+          }
+        );
+      }
     } else {
       await firestoreService.setDoc(Collections.SAVED_POSTS, user.uid, {
         posts: [docId],
@@ -109,6 +132,7 @@ function PostCard({ post }: { post: PostType }) {
 
   useEffect(() => {
     getUser();
+    isSavedPost();
   }, []);
 
   return (
@@ -145,7 +169,15 @@ function PostCard({ post }: { post: PostType }) {
                 className="grid grid-cols-[12px_1fr] gap-1 items-center"
                 onClick={savePost}
               >
-                <Bookmark size={12} /> Save
+                {isSaved ? (
+                  <>
+                    <BookmarkX size={12} /> Unsave
+                  </>
+                ) : (
+                  <>
+                    <Bookmark size={12} /> Save
+                  </>
+                )}
               </DropdownMenuItem>
 
               {user?.uid === uid && (
