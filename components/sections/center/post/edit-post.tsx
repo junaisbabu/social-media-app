@@ -68,24 +68,26 @@ export function EditPost({
       editPost.text = text;
     }
 
-    if (newFile) {
-      try {
+    try {
+      if (newFile) {
         editPost.file = await storageService.getDownloadFileURL(newFile);
         deleteStorageFile(post.file); // remove old file
-      } catch (error) {
-        console.error("Error handling file upload:", error);
-        return;
+      } else if (isOldFileDirty) {
+        editPost.file = null;
+        deleteStorageFile(post.file); // remove old file
       }
-    } else if (isOldFileDirty) {
-      editPost.file = null;
-      deleteStorageFile(post.file); // remove old file
-    }
 
-    try {
       await firestoreService.updateDoc(Collections.POSTS, post.docId, editPost);
       setIsOpen(false);
+      toast({
+        title: "Success",
+        description: `Successfully updated post: ${post.docId}`,
+      });
     } catch (error) {
-      console.error("Error updating post:", error);
+      toast({
+        title: "Error",
+        description: `Error updating post: ${error}`,
+      });
     }
   };
 
