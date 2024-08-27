@@ -44,6 +44,13 @@ function PostCard({ post }: { post: PostType }) {
   const [isSaved, setIsSaved] = useState();
   const { uid, text, file, date, docId, likes } = post;
 
+  useEffect(() => {
+    getUser();
+    isSavedPost();
+  }, []);
+
+  if (!user?.uid) return null;
+
   const getUser = async () => {
     const userData = await firestoreService.getDoc(Collections.USERS, uid);
     if (userData.exists()) {
@@ -54,14 +61,10 @@ function PostCard({ post }: { post: PostType }) {
   };
 
   const isLiked = () => {
-    if (!user?.uid) return false;
-
     return likes.includes(user.uid);
   };
 
   const likePost = async () => {
-    if (!user?.uid) return null;
-
     if (isLiked()) {
       return await firestoreService.updateDoc(Collections.POSTS, docId, {
         likes: arrayRemove(user.uid),
@@ -74,8 +77,6 @@ function PostCard({ post }: { post: PostType }) {
   };
 
   const isSavedPost = async () => {
-    if (!user?.uid) return null;
-
     const savedPost = await firestoreService.getDoc(
       Collections.SAVED_POSTS,
       user.uid
@@ -89,8 +90,6 @@ function PostCard({ post }: { post: PostType }) {
   };
 
   const savePost = async () => {
-    if (!user?.uid) return null;
-
     const savedPost = await firestoreService.getDoc(
       Collections.SAVED_POSTS,
       user.uid
@@ -129,11 +128,6 @@ function PostCard({ post }: { post: PostType }) {
 
     deleteStorageFile(file);
   };
-
-  useEffect(() => {
-    getUser();
-    isSavedPost();
-  }, []);
 
   return (
     <Card>
