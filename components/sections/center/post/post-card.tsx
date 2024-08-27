@@ -61,6 +61,13 @@ function PostCard({ post }: { post: PostType }) {
     });
   };
 
+  const showSuccessToast = (message: string) => {
+    toast({
+      title: "Success",
+      description: message,
+    });
+  };
+
   const getUser = async () => {
     try {
       const userData = await firestoreService.getDoc(Collections.USERS, uid);
@@ -131,6 +138,10 @@ function PostCard({ post }: { post: PostType }) {
           posts: [docId],
         });
       }
+
+      showSuccessToast(
+        `Successfully ${isSaved ? "unsaved" : "saved"} post: ${docId}`
+      );
     } catch (error) {
       showErrorToast("savePost: Error saving or unsaving post:" + error);
     }
@@ -144,6 +155,8 @@ function PostCard({ post }: { post: PostType }) {
       });
 
       await deleteStorageFile(file);
+
+      showSuccessToast("Successfully deleted post: " + docId);
     } catch (error) {
       showErrorToast("deletePost: Error deleting post:" + error);
     }
