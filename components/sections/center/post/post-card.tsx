@@ -35,6 +35,7 @@ import { useAuthStore } from "@/components/auth/auth-state";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { EditPost } from "./edit-post";
 import { deleteStorageFile } from "@/utils/delete-storage-file";
+import { useToast } from "@/components/ui/use-toast";
 
 dayjs.extend(relativeTime);
 
@@ -44,6 +45,8 @@ function PostCard({ post }: { post: PostType }) {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const { uid, text, file, date, docId, likes } = post;
 
+  const { toast } = useToast();
+
   useEffect(() => {
     getUser();
     isSavedPost();
@@ -51,12 +54,23 @@ function PostCard({ post }: { post: PostType }) {
 
   if (!user?.uid) return null;
 
+  const showErrorToast = (message: string) => {
+    toast({
+      title: "Error",
+      description: message,
+    });
+  };
+
   const getUser = async () => {
-    const userData = await firestoreService.getDoc(Collections.USERS, uid);
-    if (userData.exists()) {
-      setPostedUser(userData.data() as UserType);
-    } else {
-      console.log("No data available");
+    try {
+      const userData = await firestoreService.getDoc(Collections.USERS, uid);
+      if (userData.exists()) {
+        setPostedUser(userData.data() as UserType);
+      } else {
+        showErrorToast("getUser: No data available for user with UID:" + uid);
+      }
+    } catch (error) {
+      showErrorToast("getUser: Error fetching user data:" + error);
     }
   };
 
@@ -65,68 +79,74 @@ function PostCard({ post }: { post: PostType }) {
   };
 
   const likePost = async () => {
-    if (isLiked()) {
-      return await firestoreService.updateDoc(Collections.POSTS, docId, {
-        likes: arrayRemove(user.uid),
-      });
-    } else {
-      return await firestoreService.updateDoc(Collections.POSTS, docId, {
-        likes: arrayUnion(user.uid),
-      });
+    try {
+      if (isLiked()) {
+        await firestoreService.updateDoc(Collections.POSTS, docId, {
+          likes: arrayRemove(user.uid),
+        });
+      } else {
+        await firestoreService.updateDoc(Collections.POSTS, docId, {
+          likes: arrayUnion(user.uid),
+        });
+      }
+    } catch (error) {
+      showErrorToast("likePost: Error updating like status:" + error);
     }
   };
 
   const isSavedPost = async () => {
-    const savedPost = await firestoreService.getDoc(
-      Collections.SAVED_POSTS,
-      user.uid
-    );
+    try {
+      const savedPost = await firestoreService.getDoc(
+        Collections.SAVED_POSTS,
+        user.uid
+      );
 
-    if (savedPost.exists()) {
-      return setIsSaved(savedPost.data().posts.includes(docId));
+      if (savedPost.exists()) {
+        setIsSaved(savedPost.data().posts.includes(docId));
+      }
+    } catch (error) {
+      showErrorToast("isSavedPost: Error checking saved post status:" + error);
     }
-
-    return;
   };
 
   const savePost = async () => {
-    const savedPost = await firestoreService.getDoc(
-      Collections.SAVED_POSTS,
-      user.uid
-    );
-    if (savedPost.exists()) {
-      if (isSaved) {
-        return await firestoreService.updateDoc(
-          Collections.SAVED_POSTS,
-          user.uid,
-          {
+    try {
+      const savedPost = await firestoreService.getDoc(
+        Collections.SAVED_POSTS,
+        user.uid
+      );
+
+      if (savedPost.exists()) {
+        if (isSaved) {
+          await firestoreService.updateDoc(Collections.SAVED_POSTS, user.uid, {
             posts: arrayRemove(docId),
-          }
-        );
-      } else {
-        return await firestoreService.updateDoc(
-          Collections.SAVED_POSTS,
-          user.uid,
-          {
+          });
+        } else {
+          await firestoreService.updateDoc(Collections.SAVED_POSTS, user.uid, {
             posts: arrayUnion(docId),
-          }
-        );
+          });
+        }
+      } else {
+        await firestoreService.setDoc(Collections.SAVED_POSTS, user.uid, {
+          posts: [docId],
+        });
       }
-    } else {
-      await firestoreService.setDoc(Collections.SAVED_POSTS, user.uid, {
-        posts: [docId],
-      });
+    } catch (error) {
+      showErrorToast("savePost: Error saving or unsaving post:" + error);
     }
   };
 
-  const deletePost = () => {
-    firestoreService.deleteDoc(Collections.POSTS, docId);
+  const deletePost = async () => {
+    try {
+      await firestoreService.deleteDoc(Collections.POSTS, docId);
+      await firestoreService.updateDoc(Collections.MY_POSTS, uid, {
+        posts: arrayRemove(docId),
+      });
 
-    firestoreService.updateDoc(Collections.MY_POSTS, uid, {
-      posts: arrayRemove(docId),
-    });
-
-    deleteStorageFile(file);
+      await deleteStorageFile(file);
+    } catch (error) {
+      showErrorToast("deletePost: Error deleting post:" + error);
+    }
   };
 
   return (
