@@ -41,7 +41,7 @@ dayjs.extend(relativeTime);
 function PostCard({ post }: { post: PostType }) {
   const { user } = useAuthStore();
   const [postedUser, setPostedUser] = useState<UserType>();
-  const [isSaved, setIsSaved] = useState();
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const { uid, text, file, date, docId, likes } = post;
 
   useEffect(() => {
