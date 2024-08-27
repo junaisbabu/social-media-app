@@ -35,7 +35,7 @@ import { useAuthStore } from "@/components/auth/auth-state";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { EditPost } from "./edit-post";
 import { deleteStorageFile } from "@/utils/delete-storage-file";
-import { useToast } from "@/components/ui/use-toast";
+import { useShowToast } from "@/hooks/useShowToast";
 
 dayjs.extend(relativeTime);
 
@@ -45,7 +45,7 @@ function PostCard({ post }: { post: PostType }) {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const { uid, text, file, date, docId, likes } = post;
 
-  const { toast } = useToast();
+  const { showSuccessToast, showErrorToast } = useShowToast();
 
   useEffect(() => {
     getUser();
@@ -53,20 +53,6 @@ function PostCard({ post }: { post: PostType }) {
   }, []);
 
   if (!user?.uid) return null;
-
-  const showErrorToast = (message: string) => {
-    toast({
-      title: "Error",
-      description: message,
-    });
-  };
-
-  const showSuccessToast = (message: string) => {
-    toast({
-      title: "Success",
-      description: message,
-    });
-  };
 
   const getUser = async () => {
     try {

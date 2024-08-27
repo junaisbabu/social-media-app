@@ -20,8 +20,8 @@ import { useAuthStore } from "@/components/auth/auth-state";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import { PostType } from "@/type";
-import { useToast } from "@/components/ui/use-toast";
 import { deleteStorageFile } from "@/utils/delete-storage-file";
+import { useShowToast } from "@/hooks/useShowToast";
 
 export function EditPost({
   children,
@@ -31,7 +31,7 @@ export function EditPost({
   post: PostType;
 }) {
   const { user } = useAuthStore();
-  const { toast } = useToast();
+  const { showSuccessToast, showErrorToast } = useShowToast();
   const [isOpen, setIsOpen] = useState(false);
   const [newFile, setNewFile] = useState<File | null>(null);
 
@@ -51,10 +51,7 @@ export function EditPost({
     }
 
     if (!text && !oldFile && !newFile) {
-      return toast({
-        title: "Error",
-        description: "Can't save without text or a file.",
-      });
+      return showErrorToast("Can't save without text or a file.");
     }
 
     const { text: isTextDirty, oldFile: isOldFileDirty } =
@@ -79,15 +76,9 @@ export function EditPost({
 
       await firestoreService.updateDoc(Collections.POSTS, post.docId, editPost);
       setIsOpen(false);
-      toast({
-        title: "Success",
-        description: `Successfully updated post: ${post.docId}`,
-      });
+      showSuccessToast(`Successfully updated post: ${post.docId}`);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: `Error updating post: ${error}`,
-      });
+      showErrorToast(`Error updating post: ${error}`);
     }
   };
 
