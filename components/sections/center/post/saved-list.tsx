@@ -33,7 +33,7 @@ function SavedList() {
             Collections.POSTS,
             docId
           );
-          return postDoc.exists() ? postDoc.data() : null;
+          return postDoc.exists() ? { ...postDoc.data(), docId } : null;
         })
       )
     ).filter((post) => post !== null);
