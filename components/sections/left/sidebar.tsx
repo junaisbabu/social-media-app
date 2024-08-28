@@ -1,13 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
-import { House, Image, SquareUserRound, User, Settings } from "lucide-react";
+import {
+  House,
+  BookMarked,
+  SquareUserRound,
+  User,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 
 function Sidebar() {
   const list = [
     { title: "Home", Icon: House, url: "/" },
     { title: "People", Icon: SquareUserRound, url: "/people" },
-    { title: "Photos", Icon: Image, url: "/photos" },
+    { title: "Saved", Icon: BookMarked, url: "/saved" },
     { title: "Profile", Icon: User, url: "/profile" },
     { title: "Settings", Icon: Settings, url: "/settings" },
   ];
