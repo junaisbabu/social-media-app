@@ -25,7 +25,7 @@ dayjs.extend(relativeTime);
 function PostCard({ post }: { post: PostType }) {
   const { user } = useAuthStore();
   const [postedUser, setPostedUser] = useState<UserType>();
-  const { uid, text, file, date, docId, likes } = post;
+  const { uid, text, file, created_at, docId, likes } = post;
 
   const { showErrorToast } = useShowToast();
 
@@ -79,7 +79,7 @@ function PostCard({ post }: { post: PostType }) {
             <div className="flex flex-col">
               <h1 className="font-medium">{postedUser?.name}</h1>
               <span className="text-[10px] text-zinc-400">
-                {dayjs(date).fromNow()}
+                {dayjs(created_at).fromNow()}
               </span>
             </div>
           </div>

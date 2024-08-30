@@ -10,8 +10,8 @@ export type PostType = {
   uid: string;
   text: string;
   file: string | null;
-  date: Date;
   docId: string;
   likes: string[];
-  modify_at: string;
+  created_at: Date;
+  modified_at: string;
 };

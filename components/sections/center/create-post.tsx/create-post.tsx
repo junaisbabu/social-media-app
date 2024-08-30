@@ -65,7 +65,7 @@ function CreatePost() {
         uid: user?.uid,
         text: data?.text || "",
         file: url || null,
-        date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
         likes: [],
       };
 
