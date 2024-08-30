@@ -4,4 +4,5 @@ export enum Collections {
   POSTS = "posts",
   MY_POSTS = "my-posts",
   SAVED_POSTS = "saved-posts",
+  STORIES = "stories",
 }
