@@ -14,6 +14,8 @@ import { Search, SquarePlus } from "lucide-react";
 import { Input } from "./ui/input";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
+import { AddStory } from "./sections/center/stories/add-story";
+import { DialogTrigger } from "./ui/dialog";
 
 function Header() {
   const { user } = useAuthStore();
@@ -39,9 +41,13 @@ function Header() {
             placeholder="Search"
           />
         </div>
-        <Button className="rounded-xl flex gap-1">
-          <SquarePlus size={16} /> Create
-        </Button>
+        <AddStory>
+          <DialogTrigger>
+            <Button className="rounded-xl flex gap-1" type="button">
+              <SquarePlus size={16} /> Create
+            </Button>
+          </DialogTrigger>
+        </AddStory>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex items-center gap-2">
