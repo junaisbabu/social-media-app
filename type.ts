@@ -15,3 +15,13 @@ export type PostType = {
   created_at: Date;
   modified_at: string;
 };
+
+export type StoryType = {
+  created_at: Date;
+  image_url: string;
+};
+
+export type StoriesType = {
+  docId: string;
+  stories: StoryType[];
+};
