@@ -21,6 +21,11 @@ import {
 } from "@/components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { firestoreService } from "@/firebase/firestore";
+import { Collections } from "@/firebase/collections";
+import { useAuthStore } from "@/components/auth/auth-state";
+import { arrayUnion } from "firebase/firestore";
+import { storageService } from "@/firebase/storage";
 
 type AddStoryValue = {
   story_image: File;
@@ -31,6 +36,7 @@ const addStorySchema = z.object({
 });
 
 export function AddStory({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<AddStoryValue, z.infer<typeof addStorySchema>>({
@@ -38,7 +44,35 @@ export function AddStory({ children }: { children: React.ReactNode }) {
   });
 
   const onSubmit: SubmitHandler<AddStoryValue> = async (data) => {
-    console.log("hey", data);
+    if (!user) return null;
+
+    const storyFileUrl = await storageService.getDownloadFileURL(
+      data?.story_image
+    );
+
+    const storyData = {
+      created_at: new Date().toISOString(),
+      image_url: storyFileUrl,
+    };
+
+    try {
+      const storyDocSnap = await firestoreService.getDoc(
+        Collections.STORIES,
+        user.uid
+      );
+
+      if (storyDocSnap.exists()) {
+        firestoreService.updateDoc(Collections.STORIES, user.uid, {
+          stories: arrayUnion(storyData),
+        });
+      } else {
+        await firestoreService.setDoc(Collections.STORIES, user?.uid, {
+          stories: arrayUnion(storyData),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const storyImage = form.watch("story_image");
