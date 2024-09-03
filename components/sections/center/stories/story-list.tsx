@@ -1,36 +1,38 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StoryItem from "./story-item";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { SquarePlus } from "lucide-react";
-import { useAuthStore } from "@/components/auth/auth-state";
 import { AddStory } from "./add-story";
 import { DialogTrigger } from "@/components/ui/dialog";
-
-const MyStory = () => {
-  const { user } = useAuthStore();
-
-  if (!user) return null;
-
-  return (
-    <div className="rounded-xl w-32 h-56 overflow-hidden relative bg-gray-200 hover:text-primary cursor-pointer">
-      <Avatar className="h-6 w-6 rounded-lg absolute top-5 left-5 outline outline-2 outline-white outline-offset-2">
-        <AvatarImage
-          src={user?.photoURL || "https://github.com/shadcn.png"}
-          alt={user?.displayName || "Anonymous"}
-        />
-      </Avatar>
-
-      <div className="w-full h-full absolute flex flex-col items-center justify-center">
-        <SquarePlus size={20} />
-        <span className="w-full text-center font-medium">Add Story</span>
-      </div>
-    </div>
-  );
-};
+import MyStory from "./my-story";
+import { Collections } from "@/firebase/collections";
+import { firestoreService } from "@/firebase/firestore";
+import { onSnapshot, query } from "firebase/firestore";
+import { StoriesType } from "@/type";
+import { useAuthStore } from "@/components/auth/auth-state";
 
 function Stories() {
+  const [stories, setStories] = useState<StoriesType[]>([]);
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    const storiesRef = firestoreService.getCollectionRef(Collections.STORIES);
+    const q = query(storiesRef);
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const storyData = querySnapshot.docs.map((doc) => {
+        return {
+          docId: doc.id,
+          ...doc.data(),
+        };
+      }) as StoriesType[];
+
+      setStories(storyData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="shrink-0 rounded-xl overflow-hidden">
       <ul className="flex gap-3 items-center flex-nowrap overflow-y-hidden overflow-x-auto no-scrollbar">
@@ -41,24 +43,14 @@ function Stories() {
             </DialogTrigger>
           </AddStory>
         </li>
-        <li>
-          <StoryItem />
-        </li>
-        <li>
-          <StoryItem />
-        </li>
-        <li>
-          <StoryItem />
-        </li>
-        <li>
-          <StoryItem />
-        </li>
-        <li>
-          <StoryItem />
-        </li>
-        <li>
-          <StoryItem />
-        </li>
+        {stories.flatMap(
+          (story) =>
+            story.docId !== user?.uid && (
+              <li key={story.docId}>
+                <StoryItem storyData={story} />
+              </li>
+            )
+        )}
       </ul>
     </div>
   );

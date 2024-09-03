@@ -1,18 +1,48 @@
+"use client";
+
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
-import React from "react";
-import Story from "@/public/assets/story.jpg";
+import React, { useEffect, useState } from "react";
+import { StoriesType, UserType } from "@/type";
+import { Collections } from "@/firebase/collections";
+import { firestoreService } from "@/firebase/firestore";
+import { useShowToast } from "@/hooks/useShowToast";
 
-function StoryItem() {
+function StoryItem({ storyData }: { storyData: StoriesType }) {
+  const { docId, stories } = storyData;
+
+  const [storyUser, setStoryUser] = useState<UserType>();
+  const { showErrorToast } = useShowToast();
+
+  const getUser = async () => {
+    try {
+      const userData = await firestoreService.getDoc(Collections.USERS, docId);
+      if (userData.exists()) {
+        setStoryUser(userData.data() as UserType);
+      }
+    } catch (error) {
+      showErrorToast("getUser: Error fetching user data:" + error);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className="rounded-xl w-32 h-56 overflow-hidden relative">
-      <Image src={Story} alt="Story" fill />
+      <Image
+        className="object-cover"
+        src={stories[stories.length - 1].image_url}
+        alt="Story"
+        fill
+      />
       <Avatar className="h-6 w-6 rounded-lg absolute top-5 left-5 outline outline-2 outline-white outline-offset-2">
-        <AvatarImage src="https://github.com/shadcn.png" alt="story" />
+        <AvatarImage src={storyUser?.image} alt={storyUser?.name} />
       </Avatar>
 
       <span className="w-full text-center font-medium absolute -translate-x-1/2 left-1/2 bottom-4 text-white">
-        Sam Brown
+        {storyUser?.name}
       </span>
     </div>
   );
