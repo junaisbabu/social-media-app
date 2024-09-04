@@ -26,6 +26,7 @@ import { Collections } from "@/firebase/collections";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { arrayUnion } from "firebase/firestore";
 import { storageService } from "@/firebase/storage";
+import { useShowToast } from "@/hooks/useShowToast";
 
 type AddStoryValue = {
   story_image: File;
@@ -38,6 +39,7 @@ const addStorySchema = z.object({
 export function AddStory({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const { showErrorToast } = useShowToast();
 
   const form = useForm<AddStoryValue, z.infer<typeof addStorySchema>>({
     resolver: zodResolver(addStorySchema),
@@ -71,7 +73,7 @@ export function AddStory({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.log(error);
+      showErrorToast("Error adding story: " + error);
     }
   };
 
