@@ -74,6 +74,8 @@ export function AddStory({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       showErrorToast("Error adding story: " + error);
+    } finally {
+      setIsOpen(false);
     }
   };
 
