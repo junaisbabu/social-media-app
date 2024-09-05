@@ -43,13 +43,12 @@ function Stories() {
             </DialogTrigger>
           </AddStory>
         </li>
-        {stories.flatMap(
-          (story) =>
-            story.docId !== user?.uid && (
-              <li key={story.docId}>
-                <StoryItem storyData={story} />
-              </li>
-            )
+        {stories.flatMap((story) =>
+          story.stories.length && story.docId !== user?.uid ? (
+            <li key={story.docId}>
+              <StoryItem storyData={story} />
+            </li>
+          ) : null
         )}
       </ul>
     </div>

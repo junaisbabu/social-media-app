@@ -7,6 +7,7 @@ import { StoriesType, UserType } from "@/type";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
 import { useShowToast } from "@/hooks/useShowToast";
+import { handleStoryExpiration } from "@/utils/remove-story";
 
 function StoryItem({ storyData }: { storyData: StoriesType }) {
   const { docId, stories } = storyData;
@@ -28,6 +29,24 @@ function StoryItem({ storyData }: { storyData: StoriesType }) {
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    const intervals: NodeJS.Timeout[] = [];
+
+    if (storyUser) {
+      stories.forEach((story) => {
+        const interval = setInterval(() => {
+          handleStoryExpiration(story, storyUser.uid);
+        }, 1000);
+
+        intervals.push(interval);
+      });
+    }
+
+    return () => {
+      intervals.forEach(clearInterval);
+    };
+  }, [storyUser, stories]);
 
   return (
     <div className="rounded-xl w-32 h-56 overflow-hidden relative">

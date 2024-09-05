@@ -6,6 +6,7 @@ import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
 import { cn } from "@/lib/utils";
 import { StoriesType } from "@/type";
+import { handleStoryExpiration } from "@/utils/remove-story";
 import { SquarePlus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -32,6 +33,24 @@ const MyStory = () => {
 
     getMyStory();
   }, [user?.uid]);
+
+  useEffect(() => {
+    const intervals: NodeJS.Timeout[] = [];
+
+    if (user?.uid && myStory) {
+      myStory.stories.forEach((story) => {
+        const interval = setInterval(() => {
+          handleStoryExpiration(story, user.uid);
+        }, 1000);
+
+        intervals.push(interval);
+      });
+    }
+
+    return () => {
+      intervals.forEach(clearInterval);
+    };
+  }, [myStory, user]);
 
   return (
     <div
