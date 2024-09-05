@@ -79,7 +79,9 @@ function PostCard({ post }: { post: PostType }) {
             <div className="flex flex-col">
               <h1 className="font-medium">{postedUser?.name}</h1>
               <span className="text-[10px] text-zinc-400">
-                {dayjs(created_at).fromNow()}
+                {`${dayjs(created_at).fromNow()} ${
+                  post?.modified_at ? "(edited)" : ""
+                }`}
               </span>
             </div>
           </div>
