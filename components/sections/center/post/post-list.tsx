@@ -12,7 +12,7 @@ function PostList() {
 
   useEffect(() => {
     const postsRef = firestoreService.getCollectionRef(Collections.POSTS);
-    const q = query(postsRef, orderBy("date", "desc"), limit(20));
+    const q = query(postsRef, orderBy("created_at", "desc"), limit(20));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const postsData = querySnapshot.docs.map((doc) => ({
