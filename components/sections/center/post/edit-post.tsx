@@ -58,7 +58,7 @@ export function EditPost({
       formState.dirtyFields;
 
     let editPost: Partial<PostType> = {
-      modify_at: new Date().toISOString(),
+      modified_at: new Date().toISOString(),
     };
 
     if (isTextDirty) {
