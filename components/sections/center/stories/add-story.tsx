@@ -39,6 +39,7 @@ const addStorySchema = z.object({
 export function AddStory({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { showErrorToast } = useShowToast();
 
   const form = useForm<AddStoryValue, z.infer<typeof addStorySchema>>({
@@ -47,6 +48,8 @@ export function AddStory({ children }: { children: React.ReactNode }) {
 
   const onSubmit: SubmitHandler<AddStoryValue> = async (data) => {
     if (!user) return null;
+
+    setIsLoading(true);
 
     const storyFileUrl = await storageService.getDownloadFileURL(
       data?.story_image
@@ -76,6 +79,7 @@ export function AddStory({ children }: { children: React.ReactNode }) {
       showErrorToast("Error adding story: " + error);
     } finally {
       setIsOpen(false);
+      setIsLoading(false);
     }
   };
 
@@ -129,7 +133,11 @@ export function AddStory({ children }: { children: React.ReactNode }) {
                   )}
                 />
               )}
-              <Button className="mx-auto px-6 block" type="submit">
+              <Button
+                className="mx-auto px-6 block"
+                type="submit"
+                isLoading={isLoading}
+              >
                 Send
               </Button>
             </div>
