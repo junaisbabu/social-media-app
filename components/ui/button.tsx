@@ -49,7 +49,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
 
     if (isLoading)
-      props.children = <LoaderCircle className="animate-spin" size={20} />;
+      props.children = (
+        <LoaderCircle className="animate-spin mx-auto" size={20} />
+      );
 
     return (
       <Comp
