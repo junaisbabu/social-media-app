@@ -6,9 +6,11 @@ import { UserType } from "@/type";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
 import { onSnapshot, query } from "firebase/firestore";
+import { useAuthStore } from "@/components/auth/auth-state";
 
 function PeopleList() {
   const [people, setPeople] = useState<UserType[]>([]);
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const usersRef = firestoreService.getCollectionRef(Collections.USERS);
@@ -27,9 +29,11 @@ function PeopleList() {
   return (
     <div className="w-6/12 h-full rounded-xl pb-14">
       <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
-        {people.map((person) => (
-          <PeopleCard key={person.uid} person={person} />
-        ))}
+        {people.map((person) =>
+          user?.uid !== person.uid ? (
+            <PeopleCard key={person.uid} person={person} />
+          ) : null
+        )}
       </div>
     </div>
   );
