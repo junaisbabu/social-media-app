@@ -64,7 +64,7 @@ function RightSection() {
         <div className="flex justify-between items-center pl-6 pr-1 shrink-0 sticky top-0 bg-[#f4f5f8] z-10 py-2">
           <h1 className="text-zinc-400 font-medium">REQUESTS</h1>
           <div className="flex-1 min-w-4 max-w-8 h-5 p-1 text-white text-[10px] rounded-xl bg-primary flex items-center justify-center">
-            <span className="block">2</span>
+              <span className="block">{recievedRequest.length}</span>
           </div>
         </div>
         <ul className="space-y-2">
