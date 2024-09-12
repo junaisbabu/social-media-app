@@ -1,23 +1,62 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Request from "./request";
 import Contact from "./contact";
+import {
+  onSnapshot,
+  query,
+  where,
+  and,
+} from "firebase/firestore";
+import { FriendRequestStatus, FriendRequestType, UserType } from "@/type";
+import { useAuthStore } from "@/components/auth/auth-state";
+import { Collections } from "@/firebase/collections";
+import { firestoreService } from "@/firebase/firestore";
 
 function RightSection() {
-  const contacts = [
-    { name: "Junais", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "John Cena", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "Lionel Messi", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "Neymar JR", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "DQ Salman", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "Junais", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "John Cena", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "Lionel Messi", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "Neymar JR", image: "https://github.com/shadcn.png", url: "/" },
-    { name: "DQ Salman", image: "https://github.com/shadcn.png", url: "/" },
-  ];
+  const { user } = useAuthStore();
+  const [recievedRequest, setRecievedRequest] = useState<FriendRequestType[]>(
+    []
+  );
+
+  const getRecievedRequest = () => {
+    if (!user?.uid) return;
+
+    const friendRequestsRef = firestoreService.getCollectionRef(
+      Collections.FRIEND_REQUESTS
+    );
+
+    const q = query(
+      friendRequestsRef,
+      and(
+        where("to_user_id", "==", user.uid),
+        where("status", "==", FriendRequestStatus.PENDING)
+      )
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const recievedRequestData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        doc_id: doc.id,
+      })) as FriendRequestType[];
+
+      setRecievedRequest(recievedRequestData);
+    });
+
+    return () => unsubscribe();
+  };
+
+  useEffect(() => {
+    const unsubscribe = getRecievedRequest();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [user]);
   return (
     <div className="w-3/12 min-h-full overflow-hidden space-y-6">
       <div className="flex flex-col flex-nowrap overflow-auto no-scrollbar max-h-[40%]">
@@ -28,18 +67,11 @@ function RightSection() {
           </div>
         </div>
         <ul className="space-y-2">
-          <li>
-            <Request />
+          {recievedRequest.map((request) => (
+            <li key={request.doc_id}>
+              <Request request={request} />
           </li>
-          <li>
-            <Request />
-          </li>
-          <li>
-            <Request />
-          </li>
-          <li>
-            <Request />
-          </li>
+          ))}
         </ul>
       </div>
 
