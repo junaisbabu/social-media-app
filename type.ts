@@ -25,3 +25,10 @@ export type StoriesType = {
   docId: string;
   stories: StoryType[];
 };
+
+export enum FriendRequestStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  DECLINED = "declined",
+  CANCELLED = "cancelled",
+}
