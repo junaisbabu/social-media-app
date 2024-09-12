@@ -2,30 +2,91 @@
 
 import React, { useEffect, useState } from "react";
 import PeopleCard from "./people-card";
-import { UserType } from "@/type";
+import { FriendRequestStatus, UserType } from "@/type";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
-import { onSnapshot, query } from "firebase/firestore";
+import { and, onSnapshot, query, where } from "firebase/firestore";
 import { useAuthStore } from "@/components/auth/auth-state";
 
 function PeopleList() {
   const [people, setPeople] = useState<UserType[]>([]);
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    const usersRef = firestoreService.getCollectionRef(Collections.USERS);
-    const q = query(usersRef);
+  const getFriendRequests = (currentUserId: string) => {
+    const friendRequestsRef = firestoreService.getCollectionRef(
+      Collections.FRIEND_REQUESTS
+    );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const usersData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-      })) as UserType[];
+    const q1 = query(
+      friendRequestsRef,
+      and(
+        where("from_user_id", "==", currentUserId),
+        where("status", "==", FriendRequestStatus.PENDING)
+      )
+    );
 
-      setPeople(usersData);
+    const q2 = query(
+      friendRequestsRef,
+      and(
+        where("to_user_id", "==", currentUserId),
+        where("status", "==", FriendRequestStatus.PENDING)
+      )
+    );
+
+    let sentTo: string[] = [];
+    let receivedFrom: string[] = [];
+
+    const unsubscribeSent = onSnapshot(q1, (querySnapshot) => {
+      sentTo = querySnapshot.docs.map((doc) => doc.data().to_user_id);
+      updateExcludedUsers([...sentTo, ...receivedFrom]);
     });
 
-    return () => unsubscribe();
-  }, []);
+    const unsubscribeReceived = onSnapshot(q2, (querySnapshot) => {
+      receivedFrom = querySnapshot.docs.map((doc) => doc.data().from_user_id);
+      updateExcludedUsers([...sentTo, ...receivedFrom]);
+    });
+
+    const updateExcludedUsers = (excludedUserIds: string[]) => {
+      getFilteredPeople(currentUserId, excludedUserIds);
+    };
+
+    return () => {
+      unsubscribeSent();
+      unsubscribeReceived();
+    };
+  };
+
+  const getFilteredPeople = (
+    currentUserId: string,
+    excludedUserIds: string[]
+  ) => {
+    const peopleRef = firestoreService.getCollectionRef(Collections.USERS);
+
+    const q = query(peopleRef);
+    const unsubscribePeople = onSnapshot(q, (querySnapshot) => {
+      const filteredPeople = querySnapshot.docs
+        .filter(
+          (doc) => !excludedUserIds.includes(doc.id) && doc.id !== currentUserId
+        )
+        .map((doc) => doc.data() as UserType);
+
+      setPeople(filteredPeople);
+    });
+
+    return () => unsubscribePeople();
+  };
+
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    const unsubscribeFriendRequests = getFriendRequests(user.uid);
+
+    // Clean up the subscriptions when the component unmounts
+    return () => {
+      unsubscribeFriendRequests();
+    };
+  }, [user]);
+
   return (
     <div className="w-6/12 h-full rounded-xl pb-14">
       <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
