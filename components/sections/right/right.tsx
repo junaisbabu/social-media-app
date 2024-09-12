@@ -59,6 +59,7 @@ function RightSection() {
   }, [user]);
   return (
     <div className="w-3/12 min-h-full overflow-hidden space-y-6">
+      {recievedRequest.length ? (
       <div className="flex flex-col flex-nowrap overflow-auto no-scrollbar max-h-[40%]">
         <div className="flex justify-between items-center pl-6 pr-1 shrink-0 sticky top-0 bg-[#f4f5f8] z-10 py-2">
           <h1 className="text-zinc-400 font-medium">REQUESTS</h1>
@@ -74,6 +75,7 @@ function RightSection() {
           ))}
         </ul>
       </div>
+      ) : null}
 
       <div className="flex flex-col flex-nowrap overflow-auto no-scrollbar max-h-[60%] pb-12">
         <div className="flex justify-between items-center pl-6 pr-1 shrink-0 sticky top-0 bg-[#f4f5f8] z-10 py-2">
