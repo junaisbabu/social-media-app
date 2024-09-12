@@ -32,3 +32,11 @@ export enum FriendRequestStatus {
   DECLINED = "declined",
   CANCELLED = "cancelled",
 }
+
+export type FriendRequestType = {
+  doc_id: string;
+  from_user_id: string;
+  to_user_id: string;
+  status: FriendRequestStatus;
+  timestamp: Date;
+};
