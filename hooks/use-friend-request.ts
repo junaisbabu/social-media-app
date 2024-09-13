@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useShowToast } from "./useShowToast";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
+import { FriendRequestStatus } from "@/type";
 
 export const useFriendRequest = () => {
   const { showErrorToast } = useShowToast();
@@ -28,5 +29,21 @@ export const useFriendRequest = () => {
     }
   };
 
-  return { isLoading, handleSendFriendRequest };
+  const handleAcceptOrDeclineRequest = (
+    docId: string,
+    status: FriendRequestStatus
+  ) => {
+    setIsLoading(true);
+    try {
+      firestoreService.updateDoc(Collections.FRIEND_REQUESTS, docId, {
+        status,
+      });
+    } catch (error) {
+      showErrorToast(`Error ${status} friend request: ` + error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { isLoading, handleSendFriendRequest, handleAcceptOrDeclineRequest };
 };
