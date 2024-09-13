@@ -16,7 +16,7 @@ export const useFriendRequest = () => {
   ) => {
     setIsLoading(true);
     try {
-      firestoreService.addDoc(Collections.FRIEND_REQUESTS, {
+      await firestoreService.addDoc(Collections.FRIEND_REQUESTS, {
         from_user_id: fromUserId,
         to_user_id: toUserId,
         status: "pending",
