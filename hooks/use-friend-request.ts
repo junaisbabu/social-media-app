@@ -29,19 +29,60 @@ export const useFriendRequest = () => {
     }
   };
 
-  const handleAcceptOrDeclineRequest = (
-    docId: string,
+  const handleAcceptOrDeclineRequest = async (
+    fromUserId: string,
+    toUserId: string,
+    requestId: string,
     status: FriendRequestStatus
   ) => {
     setIsLoading(true);
     try {
-      firestoreService.updateDoc(Collections.FRIEND_REQUESTS, docId, {
+      await firestoreService.updateDoc(Collections.FRIEND_REQUESTS, requestId, {
         status,
       });
+
+      await handleFriendRequestResponse(
+        fromUserId,
+        toUserId,
+        requestId,
+        status
+      );
     } catch (error) {
       showErrorToast(`Error ${status} friend request: ` + error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleFriendRequestResponse = async (
+    fromUserId: string,
+    toUserId: string,
+    requestId: string,
+    status: FriendRequestStatus
+  ) => {
+    try {
+      switch (status) {
+        case FriendRequestStatus.ACCEPTED: {
+          await firestoreService.addDoc(Collections.FRIENDS, {
+            from_user_id: fromUserId,
+            to_user_id: toUserId,
+            timestamp: new Date().toISOString(),
+          });
+
+          break;
+        }
+
+        case FriendRequestStatus.DECLINED: {
+          await firestoreService.deleteDoc(
+            Collections.FRIEND_REQUESTS,
+            requestId
+          );
+
+          break;
+        }
+      }
+    } catch (error) {
+      showErrorToast(`Error ${status} friend request: ` + error);
     }
   };
 
