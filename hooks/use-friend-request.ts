@@ -19,7 +19,7 @@ export const useFriendRequest = () => {
       await firestoreService.addDoc(Collections.FRIEND_REQUESTS, {
         from_user_id: fromUserId,
         to_user_id: toUserId,
-        status: "pending",
+        status: FriendRequestStatus.PENDING,
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
