@@ -17,7 +17,7 @@ function PeopleList() {
       Collections.FRIEND_REQUESTS
     );
 
-    const q1 = query(
+    const q1Pending = query(
       friendRequestsRef,
       and(
         where("from_user_id", "==", currentUserId),
@@ -25,7 +25,7 @@ function PeopleList() {
       )
     );
 
-    const q2 = query(
+    const q2Pending = query(
       friendRequestsRef,
       and(
         where("to_user_id", "==", currentUserId),
@@ -33,26 +33,67 @@ function PeopleList() {
       )
     );
 
+    const q1Accepted = query(
+      friendRequestsRef,
+      and(
+        where("from_user_id", "==", currentUserId),
+        where("status", "==", FriendRequestStatus.ACCEPTED)
+      )
+    );
+
+    const q2Accepted = query(
+      friendRequestsRef,
+      and(
+        where("to_user_id", "==", currentUserId),
+        where("status", "==", FriendRequestStatus.ACCEPTED)
+      )
+    );
+
     let sentTo: string[] = [];
     let receivedFrom: string[] = [];
-
-    const unsubscribeSent = onSnapshot(q1, (querySnapshot) => {
-      sentTo = querySnapshot.docs.map((doc) => doc.data().to_user_id);
-      updateExcludedUsers([...sentTo, ...receivedFrom]);
-    });
-
-    const unsubscribeReceived = onSnapshot(q2, (querySnapshot) => {
-      receivedFrom = querySnapshot.docs.map((doc) => doc.data().from_user_id);
-      updateExcludedUsers([...sentTo, ...receivedFrom]);
-    });
 
     const updateExcludedUsers = (excludedUserIds: string[]) => {
       getFilteredPeople(currentUserId, excludedUserIds);
     };
 
+    const unsubscribeSentPending = onSnapshot(q1Pending, (querySnapshot) => {
+      sentTo = querySnapshot.docs.map((doc) => doc.data().to_user_id);
+      updateExcludedUsers([...sentTo, ...receivedFrom]);
+    });
+
+    const unsubscribeReceivedPending = onSnapshot(
+      q2Pending,
+      (querySnapshot) => {
+        receivedFrom = querySnapshot.docs.map((doc) => doc.data().from_user_id);
+        updateExcludedUsers([...sentTo, ...receivedFrom]);
+      }
+    );
+
+    const unsubscribeSentAccepted = onSnapshot(q1Accepted, (querySnapshot) => {
+      const acceptedSent = querySnapshot.docs.map(
+        (doc) => doc.data().to_user_id
+      );
+      sentTo = [...sentTo, ...acceptedSent];
+      updateExcludedUsers([...sentTo, ...receivedFrom]);
+    });
+
+    const unsubscribeReceivedAccepted = onSnapshot(
+      q2Accepted,
+      (querySnapshot) => {
+        const acceptedReceived = querySnapshot.docs.map(
+          (doc) => doc.data().from_user_id
+        );
+        receivedFrom = [...receivedFrom, ...acceptedReceived];
+        updateExcludedUsers([...sentTo, ...receivedFrom]);
+      }
+    );
+
+    // Cleanup function for all listeners
     return () => {
-      unsubscribeSent();
-      unsubscribeReceived();
+      unsubscribeSentPending();
+      unsubscribeReceivedPending();
+      unsubscribeSentAccepted();
+      unsubscribeReceivedAccepted();
     };
   };
 
