@@ -40,3 +40,10 @@ export type FriendRequestType = {
   status: FriendRequestStatus;
   timestamp: Date;
 };
+
+export type FriendType = {
+  from_user_id: string;
+  to_user_id: string;
+  timestamp: Date;
+  doc_id: string;
+}
