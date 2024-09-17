@@ -11,6 +11,8 @@ import { FriendRequestStatus, FriendRequestType, UserType } from "@/type";
 import React, { useEffect, useState } from "react";
 
 function Request({ request }: { request: FriendRequestType }) {
+  const { from_user_id, to_user_id, doc_id } = request;
+
   const [requestUser, setRequestUser] = useState<UserType>();
 
   const { isLoading, handleAcceptOrDeclineRequest } = useFriendRequest();
@@ -21,13 +23,13 @@ function Request({ request }: { request: FriendRequestType }) {
     try {
       const userData = await firestoreService.getDoc(
         Collections.USERS,
-        request.from_user_id
+        from_user_id
       );
       if (userData.exists()) {
         setRequestUser(userData.data() as UserType);
       } else {
         showErrorToast(
-          "getUser: No data available for user with UID:" + request.from_user_id
+          "getUser: No data available for user with UID:" + from_user_id
         );
       }
     } catch (error) {
@@ -56,10 +58,11 @@ function Request({ request }: { request: FriendRequestType }) {
         <div className="flex gap-4">
           <Button
             className="flex-1 rounded-xl"
-            isLoading={isLoading}
             onClick={() =>
               handleAcceptOrDeclineRequest(
-                request.doc_id,
+                from_user_id,
+                to_user_id,
+                doc_id,
                 FriendRequestStatus.ACCEPTED
               )
             }
@@ -69,10 +72,11 @@ function Request({ request }: { request: FriendRequestType }) {
           <Button
             className="flex-1 rounded-xl"
             variant="outline"
-            isLoading={isLoading}
             onClick={() =>
               handleAcceptOrDeclineRequest(
-                request.doc_id,
+                from_user_id,
+                to_user_id,
+                doc_id,
                 FriendRequestStatus.DECLINED
               )
             }
