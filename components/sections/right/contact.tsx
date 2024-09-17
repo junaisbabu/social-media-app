@@ -1,16 +1,11 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { UserType } from "@/type";
 import { Ellipsis } from "lucide-react";
 import React from "react";
 
-type ContactType = {
-  name: string;
-  image: string;
-  url: string;
-};
-
-function Contact({ contact }: { contact: ContactType }) {
+function Contact({ contact }: { contact: UserType }) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
