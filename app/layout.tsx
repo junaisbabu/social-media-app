@@ -25,14 +25,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(poppins.className, "bg-[#f4f5f8] h-dvh overflow-hidden")}
-      >
+      <body className={cn(poppins.className, "bg-[#f4f5f8] h-dvh")}>
         <main className="h-full flex flex-col">
           <Header />
-          <div className="h-full flex shrink-0 flex-1 gap-6 p-6">
+          <div className="w-full h-[calc(0px-100dvh)] grid grid-cols-4 shrink-0 flex-1 gap-6 p-6 pb-0">
             <LeftSection />
-            {children}
+            <div className="col-span-2 no-scrollbar overflow-y-auto flex-1 h-full">
+              {children}
+            </div>
             <RightSection />
           </div>
         </main>

@@ -129,7 +129,7 @@ function PeopleList() {
   }, [user]);
 
   return (
-    <div className="w-6/12 h-full rounded-xl pb-14">
+    <div className="h-full w-full rounded-xl pb-14">
       <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
         {people.map((person) =>
           user?.uid !== person.uid ? (
