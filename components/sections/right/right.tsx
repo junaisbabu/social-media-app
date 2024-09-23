@@ -57,10 +57,8 @@ function RightSection() {
     return () => unsubscribe();
   };
 
-  useEffect(() => {
+  const getReceivedRequests = () => {
     if (!user?.uid) return;
-
-    getFriends();
 
     const friendRequestsRef = firestoreService.getCollectionRef(
       Collections.FRIEND_REQUESTS
@@ -84,6 +82,11 @@ function RightSection() {
     });
 
     return () => unsubscribe();
+  };
+
+  useEffect(() => {
+    getFriends();
+    getReceivedRequests();
   }, [user]);
 
   return (
