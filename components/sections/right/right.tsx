@@ -17,7 +17,7 @@ function RightSection() {
     []
   );
 
-  const handleGetPeople = async () => {
+  const getFriends = async () => {
     const friendsRef = firestoreService.getCollectionRef(Collections.FRIENDS);
 
     const q = query(
@@ -60,7 +60,7 @@ function RightSection() {
   useEffect(() => {
     if (!user?.uid) return;
 
-    handleGetPeople();
+    getFriends();
 
     const friendRequestsRef = firestoreService.getCollectionRef(
       Collections.FRIEND_REQUESTS
