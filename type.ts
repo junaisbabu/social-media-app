@@ -46,4 +46,8 @@ export type FriendType = {
   to_user_id: string;
   timestamp: Date;
   doc_id: string;
-}
+};
+
+export type PeopleType = {
+  doc_id: string;
+} & UserType;
