@@ -1,14 +1,18 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import Request from "./request";
-import Contact from "./contact";
 import { onSnapshot, query, where, and, or } from "firebase/firestore";
-import { FriendRequestStatus, FriendRequestType, UserType } from "@/type";
+import {
+  FriendRequestStatus,
+  FriendRequestType,
+  PeopleType,
+  UserType,
+} from "@/type";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
+import FriendsOrPeople from "./friends-or-people";
 
 function RightSection() {
   const { user } = useAuthStore();
@@ -16,15 +20,18 @@ function RightSection() {
   const [recievedRequest, setRecievedRequest] = useState<FriendRequestType[]>(
     []
   );
+  const [people, setPeople] = useState<PeopleType[]>([]);
 
   const getFriends = async () => {
+    if (!user?.uid) return;
+
     const friendsRef = firestoreService.getCollectionRef(Collections.FRIENDS);
 
     const q = query(
       friendsRef,
       or(
-        where("from_user_id", "==", user?.uid),
-        where("to_user_id", "==", user?.uid)
+        where("from_user_id", "==", user.uid),
+        where("to_user_id", "==", user.uid)
       )
     );
 
@@ -84,9 +91,27 @@ function RightSection() {
     return () => unsubscribe();
   };
 
+  const getPeople = () => {
+    const peopleRef = firestoreService.getCollectionRef(Collections.USERS);
+
+    const q = query(peopleRef);
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const peopleData = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        doc_id: doc.id,
+      })) as PeopleType[];
+
+      setPeople(peopleData);
+    });
+
+    return () => unsubscribe();
+  };
+
   useEffect(() => {
     getFriends();
     getReceivedRequests();
+    getPeople();
   }, [user]);
 
   return (
@@ -109,32 +134,18 @@ function RightSection() {
         </div>
       ) : null}
 
-      {friends.length ? (
-        <div className="flex flex-col flex-nowrap overflow-auto no-scrollbar max-h-[60%] pb-12">
-          <div className="flex justify-between items-center pl-6 pr-1 shrink-0 sticky top-0 bg-[#f4f5f8] z-10 py-2">
-            <h1 className="text-zinc-400 font-medium">FRIENDS</h1>
-            <div className="flex-1 min-w-4 max-w-8 h-5 p-1 text-white text-[10px] rounded-xl bg-primary flex items-center justify-center">
-              <span className="block">{friends?.length}</span>
-            </div>
-          </div>
-          <Card className="shrink-0">
-            <CardContent className="p-6 bg-white">
-              <ul>
-                {friends.map(
-                  (contact: UserType) =>
-                    contact.uid !== user?.uid && (
-                      <li
-                        key={contact.uid}
-                        className="py-2 last:pb-0 first:pt-0"
-                      >
-                        <Contact contact={contact} />
-                      </li>
-                    )
-                )}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
+      {friends?.length ? (
+        <FriendsOrPeople
+          users={friends}
+          title="FRIENDS"
+          noOfUsers={friends.length}
+        />
+      ) : people?.length ? (
+        <FriendsOrPeople
+          users={people}
+          title="PEOPLE"
+          noOfUsers={people.length - 1}
+        />
       ) : null}
     </div>
   );
