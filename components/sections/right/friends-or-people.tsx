@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { UserType } from "@/type";
 import React from "react";
-import Contact from "./contact";
+import Contact from "./contact/contact";
 import { useAuthStore } from "@/components/auth/auth-state";
 
 function FriendsOrPeople({
