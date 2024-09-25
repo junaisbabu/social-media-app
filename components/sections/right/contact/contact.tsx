@@ -2,8 +2,8 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { UserType } from "@/type";
-import { Ellipsis } from "lucide-react";
 import React from "react";
+import ContactActions from "./contact-actions";
 
 function Contact({ contact }: { contact: UserType }) {
   return (
@@ -14,7 +14,7 @@ function Contact({ contact }: { contact: UserType }) {
         </Avatar>
         <span className="font-medium">{contact.name}</span>
       </div>
-      <Ellipsis className="h-4 px-1 text-zinc-400" />
+      <ContactActions />
     </div>
   );
 }
