@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
+import { getUsername } from "@/utils/get-username";
 
 const SignIn = () => {
   const router = useRouter();
@@ -34,8 +35,9 @@ const SignIn = () => {
       uid,
       email,
       name: displayName,
-      phone_no: phoneNumber,
+      phone_no: phoneNumber || "",
       image: photoURL,
+      username: getUsername(displayName, uid),
     };
 
     firestoreService.setDoc(Collections.USERS, uid, userData);
