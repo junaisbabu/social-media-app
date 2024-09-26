@@ -36,6 +36,7 @@ const FormSchema = z.object({
 function Profile() {
   const { user: currentUser } = useAuthStore();
   const [user, setUser] = useState<UserType>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -43,10 +44,17 @@ function Profile() {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     if (!currentUser?.uid) return;
-    await firestoreService.setDoc(Collections.USERS, currentUser.uid, {
-      ...user,
-      ...data,
-    });
+    setIsLoading(true);
+    try {
+      await firestoreService.setDoc(Collections.USERS, currentUser.uid, {
+        ...user,
+        ...data,
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getUser = async () => {
@@ -155,7 +163,7 @@ function Profile() {
           />
         </div>
 
-        <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit" isLoading={isLoading}>
           Save Changes
         </Button>
       </form>
