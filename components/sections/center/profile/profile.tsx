@@ -38,7 +38,7 @@ function Profile() {
   const { user: currentUser } = useAuthStore();
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(false);
-  const { showErrorToast } = useShowToast();
+  const { showSuccessToast, showErrorToast } = useShowToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -52,6 +52,7 @@ function Profile() {
         ...user,
         ...data,
       });
+      showSuccessToast("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile: ", error);
       showErrorToast("Error updating profile. Please try again.");
