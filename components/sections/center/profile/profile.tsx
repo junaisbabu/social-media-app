@@ -18,6 +18,7 @@ import { useAuthStore } from "@/components/auth/auth-state";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useShowToast } from "@/hooks/useShowToast";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(2, {
@@ -37,6 +38,7 @@ function Profile() {
   const { user: currentUser } = useAuthStore();
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(false);
+  const { showErrorToast } = useShowToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -50,8 +52,9 @@ function Profile() {
         ...user,
         ...data,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error("Error updating profile: ", error);
+      showErrorToast("Error updating profile. Please try again.");
     } finally {
       setIsLoading(false);
     }
