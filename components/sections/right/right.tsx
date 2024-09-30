@@ -3,16 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Request from "./request";
 import { onSnapshot, query, where, and, or } from "firebase/firestore";
-import {
-  FriendRequestStatus,
-  FriendRequestType,
-  PeopleType,
-  UserType,
-} from "@/type";
+import { FriendRequestStatus, FriendRequestType, UserType } from "@/type";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
 import FriendsOrPeople from "./friends-or-people";
+import { usePeople } from "@/hooks/use-people";
 
 function RightSection() {
   const { user } = useAuthStore();
@@ -20,7 +16,7 @@ function RightSection() {
   const [recievedRequest, setRecievedRequest] = useState<FriendRequestType[]>(
     []
   );
-  const [people, setPeople] = useState<PeopleType[]>([]);
+  const { people } = usePeople();
 
   const getFriends = async () => {
     if (!user?.uid) return;
@@ -91,27 +87,9 @@ function RightSection() {
     return () => unsubscribe();
   };
 
-  const getPeople = () => {
-    const peopleRef = firestoreService.getCollectionRef(Collections.USERS);
-
-    const q = query(peopleRef);
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const peopleData = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        doc_id: doc.id,
-      })) as PeopleType[];
-
-      setPeople(peopleData);
-    });
-
-    return () => unsubscribe();
-  };
-
   useEffect(() => {
     getFriends();
     getReceivedRequests();
-    getPeople();
   }, [user]);
 
   return (
