@@ -122,7 +122,7 @@ function RightSection() {
         <FriendsOrPeople
           users={people}
           title="PEOPLE"
-          noOfUsers={people.length - 1}
+          noOfUsers={people.length}
         />
       ) : null}
     </div>
