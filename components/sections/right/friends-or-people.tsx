@@ -32,7 +32,10 @@ function FriendsOrPeople({
               (contact: UserType) =>
                 contact.uid !== user?.uid && (
                   <li key={contact.uid} className="py-2 last:pb-0 first:pt-0">
-                    <Contact contact={contact} />
+                    <Contact
+                      contact={contact}
+                      isFriend={title === "FRIENDS" ? true : false}
+                    />
                   </li>
                 )
             )}
