@@ -23,7 +23,8 @@ export const useFriendRequest = () => {
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      showErrorToast("Error sending friend request: " + error);
+      showErrorToast("Failed to send friend request. Please try again.");
+      console.error("Error sending friend request: " + error);
     } finally {
       setIsLoading(false);
     }
@@ -48,7 +49,8 @@ export const useFriendRequest = () => {
         status
       );
     } catch (error) {
-      showErrorToast(`Error ${status} friend request: ` + error);
+      showErrorToast("Failed to respond to the friend request.");
+      console.error(`Error ${status} friend request: ` + error);
     } finally {
       setIsLoading(false);
     }
