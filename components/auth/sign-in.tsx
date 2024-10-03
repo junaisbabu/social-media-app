@@ -11,23 +11,15 @@ import { Button } from "../ui/button";
 import GoogleLogo from "@/public/assets/google.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useToast } from "../ui/use-toast";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import { getUsername } from "@/utils/get-username";
+import { useShowToast } from "@/hooks/useShowToast";
 
 const SignIn = () => {
   const router = useRouter();
 
-  const { toast } = useToast();
-
-  const showToast = (description: string) => {
-    toast({
-      variant: "destructive",
-      title: "Error",
-      description,
-    });
-  };
+  const { showErrorToast } = useShowToast();
 
   const handleNewUser = async (user: User) => {
     const { displayName, email, phoneNumber, photoURL, uid } = user;
@@ -69,23 +61,23 @@ const SignIn = () => {
 
         switch (errorCode) {
           case "auth/operation-not-allowed":
-            showToast("Email/password accounts are not enabled.");
+            showErrorToast("Email/password accounts are not enabled.");
             break;
           case "auth/operation-not-supported-in-this-environment":
-            showToast("HTTP protocol is not supported. Please use HTTPS.");
+            showErrorToast("HTTP protocol is not supported. Please use HTTPS.");
             break;
           case "auth/popup-blocked":
-            showToast(
+            showErrorToast(
               "Popup has been blocked by the browser. Please allow popups for this website."
             );
             break;
           case "auth/popup-closed-by-user":
-            showToast(
+            showErrorToast(
               "Popup has been closed by the user before finalizing the operation. Please try again."
             );
             break;
           default:
-            showToast(errorMessage);
+            showErrorToast(errorMessage);
             break;
         }
       });
