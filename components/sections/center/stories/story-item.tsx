@@ -22,7 +22,8 @@ function StoryItem({ storyData }: { storyData: StoriesType }) {
         setStoryUser(userData.data() as UserType);
       }
     } catch (error) {
-      showErrorToast("getUser: Error fetching user data:" + error);
+      showErrorToast("Failed to fetch user data. Please try again.");
+      console.error("getUser: Error fetching user data:" + error);
     }
   };
 

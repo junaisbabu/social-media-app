@@ -42,7 +42,7 @@ function PostActions({ post }: { post: PostType }) {
         setIsSaved(savedPost.data().posts.includes(post.docId));
       }
     } catch (error) {
-      showErrorToast("isSavedPost: Error checking saved post status:" + error);
+      console.error("isSavedPost: Error checking saved post status:" + error);
     }
   };
 
@@ -70,11 +70,12 @@ function PostActions({ post }: { post: PostType }) {
       }
 
       isSavedPost();
-      showSuccessToast(
-        `Successfully ${isSaved ? "unsaved" : "saved"} post: ${docId}`
-      );
+      showSuccessToast(`Post ${isSaved ? "unsaved" : "saved"} successfully.`);
     } catch (error) {
-      showErrorToast("savePost: Error saving or unsaving post:" + error);
+      showErrorToast(
+        `Failed to ${isSaved ? "unsave" : "save"} the post. Please try again.`
+      );
+      console.error("savePost: Error saving or unsaving post:" + error);
     }
   };
 
@@ -87,9 +88,10 @@ function PostActions({ post }: { post: PostType }) {
 
       await deleteStorageFile(file);
 
-      showSuccessToast("Successfully deleted post: " + docId);
+      showSuccessToast("Post deleted successfully.");
     } catch (error) {
-      showErrorToast("deletePost: Error deleting post:" + error);
+      showErrorToast("Failed to delete post. Please try again." + error);
+      console.error("deletePost: Error deleting post:" + error);
     }
   };
 

@@ -76,7 +76,8 @@ export function AddStory({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      showErrorToast("Error adding story: " + error);
+      showErrorToast("Failed to add story. Please try again.");
+      console.error("Error adding story: " + error);
     } finally {
       setIsOpen(false);
       setIsLoading(false);

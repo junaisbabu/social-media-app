@@ -76,9 +76,10 @@ export function EditPost({
 
       await firestoreService.updateDoc(Collections.POSTS, post.docId, editPost);
       setIsOpen(false);
-      showSuccessToast(`Successfully updated post: ${post.docId}`);
+      showSuccessToast("Post updated successfully.");
     } catch (error) {
-      showErrorToast(`Error updating post: ${error}`);
+      showErrorToast("Failed to update the post. Please try again.");
+      console.error(`Error updating post: ${error}`);
     }
   };
 

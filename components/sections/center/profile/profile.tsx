@@ -54,8 +54,8 @@ function Profile() {
       });
       showSuccessToast("Profile updated successfully!");
     } catch (error) {
+      showErrorToast("Failed to update profile. Please try again.");
       console.error("Error updating profile: ", error);
-      showErrorToast("Error updating profile. Please try again.");
     } finally {
       setIsLoading(false);
     }

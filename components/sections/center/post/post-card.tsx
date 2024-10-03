@@ -41,10 +41,11 @@ function PostCard({ post }: { post: PostType }) {
       if (userData.exists()) {
         setPostedUser(userData.data() as UserType);
       } else {
-        showErrorToast("getUser: No data available for user with UID:" + uid);
+        showErrorToast("No data available for user with UID:" + uid);
       }
     } catch (error) {
-      showErrorToast("getUser: Error fetching user data:" + error);
+      showErrorToast("Failed to fetch user data. Please try again.");
+      console.error("getUser: Error fetching user data:" + error);
     }
   };
 
