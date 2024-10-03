@@ -28,12 +28,11 @@ function Request({ request }: { request: FriendRequestType }) {
       if (userData.exists()) {
         setRequestUser(userData.data() as UserType);
       } else {
-        showErrorToast(
-          "getUser: No data available for user with UID:" + from_user_id
-        );
+        showErrorToast("No data available for user with UID:" + from_user_id);
       }
     } catch (error) {
-      showErrorToast("getUser: Error fetching user data:" + error);
+      showErrorToast("Failed to fetch user data. Please try again.");
+      console.error("getUser: Error fetching user data:" + error);
     }
   };
 
