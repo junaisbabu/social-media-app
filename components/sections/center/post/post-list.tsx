@@ -29,7 +29,7 @@ function PostList() {
   return (
     <ul className="space-y-4">
       {posts?.map((post: PostType) => (
-        <li key={post.docId}>
+        <li key={post.docId} className="last:pb-4">
           <PostCard post={post} />
         </li>
       ))}
