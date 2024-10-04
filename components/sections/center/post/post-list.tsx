@@ -27,11 +27,13 @@ function PostList() {
   }, []);
 
   return (
-    <div className="space-y-4">
+    <ul className="space-y-4">
       {posts?.map((post: PostType) => (
-        <PostCard key={post.docId} post={post} />
+        <li key={post.docId}>
+          <PostCard post={post} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
