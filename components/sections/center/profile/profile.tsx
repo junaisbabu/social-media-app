@@ -39,6 +39,9 @@ function Profile() {
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(false);
   const { showSuccessToast, showErrorToast } = useShowToast();
+  const [count, setCount] = useState({
+    posts: 0,
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -74,9 +77,25 @@ function Profile() {
     }
   };
 
+  const getPostsCount = async () => {
+    if (!user?.uid) return;
+
+    const postsData = await firestoreService.getDoc(
+      Collections.MY_POSTS,
+      user.uid
+    );
+
+    setCount({ ...count, posts: postsData?.data()?.posts.length });
+  };
+
+
   useEffect(() => {
     getUser();
   }, [currentUser]);
+
+  useEffect(() => {
+    getPostsCount();
+  }, [user]);
 
   return (
     <Form {...form}>
@@ -88,7 +107,7 @@ function Profile() {
         <div className="w-full flex items-baseline justify-evenly gap-4">
           <div className="flex gap-1 items-end">
             <h1 className="font-medium text-2xl p-0 m-0 box-content">
-              111K <span className="text-base font-normal">Posts</span>
+              {count.posts} <span className="text-base font-normal">Posts</span>
             </h1>
           </div>
           <Avatar className="w-16 h-16 rounded-xl">
