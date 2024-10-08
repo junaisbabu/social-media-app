@@ -19,6 +19,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useShowToast } from "@/hooks/useShowToast";
+import { LoaderCircle } from "lucide-react";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(2, {
@@ -41,6 +42,7 @@ function Profile() {
   const { showSuccessToast, showErrorToast } = useShowToast();
   const [count, setCount] = useState({
     posts: 0,
+    isPostsLoading: false,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -80,14 +82,19 @@ function Profile() {
   const getPostsCount = async () => {
     if (!user?.uid) return;
 
+    setCount({ ...count, isPostsLoading: true });
+
     const postsData = await firestoreService.getDoc(
       Collections.MY_POSTS,
       user.uid
     );
 
-    setCount({ ...count, posts: postsData?.data()?.posts.length });
+    setCount({
+      ...count,
+      posts: postsData?.data()?.posts.length,
+      isPostsLoading: false,
+    });
   };
-
 
   useEffect(() => {
     getUser();
@@ -106,8 +113,13 @@ function Profile() {
         <h1 className="font-medium">Edit Profile</h1>
         <div className="w-full flex items-baseline justify-evenly gap-4">
           <div className="flex gap-1 items-end">
-            <h1 className="font-medium text-2xl p-0 m-0 box-content">
-              {count.posts} <span className="text-base font-normal">Posts</span>
+            <h1 className="font-medium text-2xl p-0 m-0 box-content flex gap-1 items-center">
+              {count.isPostsLoading ? (
+                <LoaderCircle className="animate-spin mx-auto" size={20} />
+              ) : (
+                count.posts
+              )}
+              <span className="text-base font-normal">Posts</span>
             </h1>
           </div>
           <Avatar className="w-16 h-16 rounded-xl">
