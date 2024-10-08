@@ -111,8 +111,8 @@ function Profile() {
         className="w-full space-y-6 px-1"
       >
         <h1 className="font-medium">Edit Profile</h1>
-        <div className="w-full flex items-baseline justify-evenly gap-4">
-          <div className="flex gap-1 items-end">
+        <div className="w-full grid grid-cols-3 place-items-center gap-4">
+          <div>
             <h1 className="font-medium text-2xl p-0 m-0 box-content flex gap-1 items-center">
               {count.isPostsLoading ? (
                 <LoaderCircle className="animate-spin mx-auto" size={20} />
