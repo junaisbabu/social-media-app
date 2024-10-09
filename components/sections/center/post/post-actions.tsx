@@ -98,7 +98,7 @@ function PostActions({ post }: { post: PostType }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Ellipsis className="h-4 px-1 border rounded text-zinc-400" />
+        <Ellipsis className="h-4 px-1 rounded text-zinc-400" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {user?.uid === uid && (
