@@ -20,6 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useShowToast } from "@/hooks/useShowToast";
 import { LoaderCircle } from "lucide-react";
+import { getDocs, or, query, where } from "firebase/firestore";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(2, {
@@ -43,6 +44,7 @@ function Profile() {
   const [count, setCount] = useState({
     posts: 0,
     isPostsLoading: false,
+    friends: 0,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -96,12 +98,35 @@ function Profile() {
     }));
   };
 
+  const getFriends = async () => {
+    if (!user?.uid) return;
+
+    const friendsRef = firestoreService.getCollectionRef(Collections.FRIENDS);
+
+    const q = query(
+      friendsRef,
+      or(
+        where("from_user_id", "==", user.uid),
+        where("to_user_id", "==", user.uid)
+      )
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+
+      setCount((prevCount) => ({ ...prevCount, friends: querySnapshot.size }));
+    } catch (error) {
+      console.error("Error getFriends: ", error);
+    }
+  };
+
   useEffect(() => {
     getUser();
   }, [currentUser]);
 
   useEffect(() => {
     getPostsCount();
+    getFriends();
   }, [user]);
 
   return (
@@ -130,7 +155,8 @@ function Profile() {
           </Avatar>
           <div className="flex gap-1 items-end">
             <h1 className="font-medium text-2xl">
-              111K <span className="text-base font-normal">Friends</span>
+              {count.friends}{" "}
+              <span className="text-base font-normal">Friends</span>
             </h1>
           </div>
         </div>
