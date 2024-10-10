@@ -82,18 +82,18 @@ function Profile() {
   const getPostsCount = async () => {
     if (!user?.uid) return;
 
-    setCount({ ...count, isPostsLoading: true });
+    setCount((prevCount) => ({ ...prevCount, isPostsLoading: true }));
 
     const postsData = await firestoreService.getDoc(
       Collections.MY_POSTS,
       user.uid
     );
 
-    setCount({
-      ...count,
+    setCount((prevCount) => ({
+      ...prevCount,
       posts: postsData?.data()?.posts.length,
       isPostsLoading: false,
-    });
+    }));
   };
 
   useEffect(() => {
