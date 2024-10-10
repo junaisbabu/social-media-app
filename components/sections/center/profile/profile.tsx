@@ -45,6 +45,7 @@ function Profile() {
     posts: 0,
     isPostsLoading: false,
     friends: 0,
+    isFriendsLoading: false,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -101,6 +102,8 @@ function Profile() {
   const getFriends = async () => {
     if (!user?.uid) return;
 
+    setCount((prevCount) => ({ ...prevCount, isFriendsLoading: true }));
+
     const friendsRef = firestoreService.getCollectionRef(Collections.FRIENDS);
 
     const q = query(
@@ -114,7 +117,11 @@ function Profile() {
     try {
       const querySnapshot = await getDocs(q);
 
-      setCount((prevCount) => ({ ...prevCount, friends: querySnapshot.size }));
+      setCount((prevCount) => ({
+        ...prevCount,
+        friends: querySnapshot.size,
+        isFriendsLoading: false,
+      }));
     } catch (error) {
       console.error("Error getFriends: ", error);
     }
@@ -154,8 +161,12 @@ function Profile() {
             />
           </Avatar>
           <div className="flex gap-1 items-end">
-            <h1 className="font-medium text-2xl">
-              {count.friends}{" "}
+            <h1 className="font-medium text-2xl p-0 m-0 box-content flex gap-1 items-center">
+              {count.isFriendsLoading ? (
+                <LoaderCircle className="animate-spin mx-auto" size={20} />
+              ) : (
+                count.friends
+              )}
               <span className="text-base font-normal">Friends</span>
             </h1>
           </div>
