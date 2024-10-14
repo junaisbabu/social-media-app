@@ -126,8 +126,9 @@ function PostCard({ post }: { post: PostType }) {
                   "Copied the post link! Feel free to share it!"
                 );
               })
-              .catch(() => {
-                console.log("Failed to copy");
+              .catch((error) => {
+                console.log("Failed to copy: ", error);
+                showErrorToast("Failed to copy. Please try again.");
               });
           }}
         />
