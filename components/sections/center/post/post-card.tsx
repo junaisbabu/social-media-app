@@ -27,7 +27,7 @@ function PostCard({ post }: { post: PostType }) {
   const [postedUser, setPostedUser] = useState<UserType>();
   const { uid, text, file, created_at, docId, likes } = post;
 
-  const { showErrorToast } = useShowToast();
+  const { showSuccessToast, showErrorToast } = useShowToast();
 
   useEffect(() => {
     getUser();
@@ -116,7 +116,21 @@ function PostCard({ post }: { post: PostType }) {
           <MessageCircle size={20} />
           <span className="text-zinc-400">38</span>
         </div>
-        <Share2 size={20} />
+        <Share2
+          size={20}
+          onClick={() => {
+            navigator.clipboard
+              .writeText(`${process.env.NEXT_PUBLIC_DOMAIN}/post/${post.docId}`)
+              .then(() => {
+                showSuccessToast(
+                  "Copied the post link! Feel free to share it!"
+                );
+              })
+              .catch(() => {
+                console.log("Failed to copy");
+              });
+          }}
+        />
       </CardFooter>
     </Card>
   );
