@@ -16,12 +16,15 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import { AddStory } from "./sections/center/stories/add-story";
 import { DialogTrigger } from "./ui/dialog";
+import Cookies from "js-cookie";
 
 function Header() {
   const { user } = useAuthStore();
 
   const handleSignOut = () => {
-    signOut(auth);
+    signOut(auth).then(() => {
+      Cookies.remove("userToken");
+    });
   };
 
   return (
