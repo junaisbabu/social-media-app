@@ -15,6 +15,7 @@ import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import { getUsername } from "@/utils/get-username";
 import { useShowToast } from "@/hooks/useShowToast";
+import Cookies from "js-cookie";
 
 const SignIn = () => {
   const router = useRouter();
@@ -51,6 +52,9 @@ const SignIn = () => {
           handleNewUser(user);
         }
 
+        if (token) {
+          Cookies.set("userToken", token);
+        }
         router.push("/");
       })
       .catch((error) => {
