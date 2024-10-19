@@ -28,7 +28,7 @@ function Contact({
         <span className="font-medium">{contact.name}</span>
       </div>
       {isFriend ? (
-        <ContactActions />
+        <ContactActions user={contact} />
       ) : (
         <Button
           className="p-0 m-0 h-8 w-8 rounded-sm"

@@ -36,7 +36,7 @@ const FormSchema = z.object({
   location: z.string({ required_error: "Location is required" }),
 });
 
-function Profile() {
+function Profile({ choosedUserId }: { choosedUserId?: string }) {
   const { user: currentUser } = useAuthStore();
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +74,7 @@ function Profile() {
 
     const userData = await firestoreService.getDoc(
       Collections.USERS,
-      currentUser.uid
+      choosedUserId ? choosedUserId : currentUser.uid
     );
     if (userData.exists()) {
       form.reset(userData.data());
