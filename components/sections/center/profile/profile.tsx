@@ -235,9 +235,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
           />
         </div>
 
-        <Button className="w-full" type="submit" isLoading={isLoading}>
-          Save Changes
-        </Button>
+        {!choosedUserId && (
+          <Button className="w-full" type="submit" isLoading={isLoading}>
+            Save Changes
+          </Button>
+        )}
       </form>
     </Form>
   );
