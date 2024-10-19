@@ -180,11 +180,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Full Name"
-                    readOnly={!!choosedUserId}
-                    {...field}
-                  />
+                  <Input readOnly={!!choosedUserId} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -197,11 +193,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Username"
-                    readOnly={!!choosedUserId}
-                    {...field}
-                  />
+                  <Input readOnly={!!choosedUserId} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -214,11 +206,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Email"
-                    readOnly={!!choosedUserId}
-                    {...field}
-                  />
+                  <Input readOnly={!!choosedUserId} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -231,11 +219,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               <FormItem>
                 <FormLabel>Mobile No</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Phone Number"
-                    readOnly={!!choosedUserId}
-                    {...field}
-                  />
+                  <Input readOnly={!!choosedUserId} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -249,11 +233,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               <FormItem className="col-span-2">
                 <FormLabel>Location</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Location"
-                    readOnly={!!choosedUserId}
-                    {...field}
-                  />
+                  <Input readOnly={!!choosedUserId} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
