@@ -178,7 +178,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Full Name" {...field} />
+                  <Input
+                    placeholder="Full Name"
+                    readOnly={!!choosedUserId}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -190,7 +194,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Username" {...field} />
+                  <Input
+                    placeholder="Username"
+                    readOnly={!!choosedUserId}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -202,7 +210,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Email" readOnly {...field} />
+                  <Input
+                    placeholder="Email"
+                    readOnly={!!choosedUserId}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -214,7 +226,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Phone Number" {...field} />
+                  <Input
+                    placeholder="Phone Number"
+                    readOnly={!!choosedUserId}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -227,7 +243,11 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             render={({ field }) => (
               <FormItem className="col-span-2">
                 <FormControl>
-                  <Input placeholder="Location" {...field} />
+                  <Input
+                    placeholder="Location"
+                    readOnly={!!choosedUserId}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
