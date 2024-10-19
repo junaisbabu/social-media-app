@@ -149,7 +149,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               {count.isPostsLoading ? (
                 <LoaderCircle className="animate-spin mx-auto" size={20} />
               ) : (
-                count.posts
+                count.posts || 0
               )}
               <span className="text-base font-normal">Posts</span>
             </h1>
@@ -165,7 +165,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
               {count.isFriendsLoading ? (
                 <LoaderCircle className="animate-spin mx-auto" size={20} />
               ) : (
-                count.friends
+                count.friends || 0
               )}
               <span className="text-base font-normal">Friends</span>
             </h1>
