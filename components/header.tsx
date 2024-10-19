@@ -29,51 +29,53 @@ function Header() {
   };
 
   return (
-    <header className="h-16 flex shrink-0 justify-between items-center px-6 bg-white">
-      <div>
-        <h1 className="font-semibold">Socialo</h1>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="relative mr-2">
-          <Search
-            className="absolute top-2.5 left-2 text-slate-500"
-            size={16}
-          />
-          <Input
-            className="bg-input rounded-xl pl-8"
-            type="text"
-            placeholder="Search"
-          />
+    <header className="w-full h-16 shrink-0 bg-white">
+      <div className="w-full h-full max-w-[1360px] px-6 flex shrink-0 justify-between items-center mx-auto">
+        <div>
+          <h1 className="font-semibold">Socialo</h1>
         </div>
-        <AddStory>
-          <DialogTrigger>
-            <Button className="rounded-xl flex gap-1" type="button">
-              <SquarePlus size={16} /> Create
-            </Button>
-          </DialogTrigger>
-        </AddStory>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex items-center gap-2">
-              {user ? (
-                <Avatar className="w-9 h-9 rounded-xl">
-                  <AvatarImage
-                    src={user.photoURL || "https://github.com/shadcn.png"}
-                    alt={user.displayName || "Anonymous"}
-                  />
-                </Avatar>
-              ) : null}
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <Link href="/profile">
-              <DropdownMenuItem>View Profile</DropdownMenuItem>
-            </Link>
+        <div className="flex items-center gap-2">
+          <div className="relative mr-2">
+            <Search
+              className="absolute top-2.5 left-2 text-slate-500"
+              size={16}
+            />
+            <Input
+              className="bg-input rounded-xl pl-8"
+              type="text"
+              placeholder="Search"
+            />
+          </div>
+          <AddStory>
+            <DialogTrigger>
+              <Button className="rounded-xl flex gap-1" type="button">
+                <SquarePlus size={16} /> Create
+              </Button>
+            </DialogTrigger>
+          </AddStory>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="flex items-center gap-2">
+                {user ? (
+                  <Avatar className="w-9 h-9 rounded-xl">
+                    <AvatarImage
+                      src={user.photoURL || "https://github.com/shadcn.png"}
+                      alt={user.displayName || "Anonymous"}
+                    />
+                  </Avatar>
+                ) : null}
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Link href="/profile">
+                <DropdownMenuItem>View Profile</DropdownMenuItem>
+              </Link>
             <DropdownMenuItem className="text-red-500" onClick={handleSignOut}>
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
