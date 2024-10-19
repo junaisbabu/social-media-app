@@ -17,6 +17,7 @@ import { auth } from "@/firebase/firebase";
 import { AddStory } from "./sections/center/stories/add-story";
 import { DialogTrigger } from "./ui/dialog";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 function Header() {
   const { user } = useAuthStore();
@@ -65,7 +66,9 @@ function Header() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>View Profile</DropdownMenuItem>
+            <Link href="/profile">
+              <DropdownMenuItem>View Profile</DropdownMenuItem>
+            </Link>
             <DropdownMenuItem className="text-red-500" onClick={handleSignOut}>
               Logout
             </DropdownMenuItem>

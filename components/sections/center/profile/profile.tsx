@@ -36,7 +36,7 @@ const FormSchema = z.object({
   location: z.string({ required_error: "Location is required" }),
 });
 
-function Profile() {
+function Profile({ choosedUserId }: { choosedUserId?: string }) {
   const { user: currentUser } = useAuthStore();
   const [user, setUser] = useState<UserType>();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +74,7 @@ function Profile() {
 
     const userData = await firestoreService.getDoc(
       Collections.USERS,
-      currentUser.uid
+      choosedUserId ? choosedUserId : currentUser.uid
     );
     if (userData.exists()) {
       form.reset(userData.data());
@@ -149,7 +149,7 @@ function Profile() {
               {count.isPostsLoading ? (
                 <LoaderCircle className="animate-spin mx-auto" size={20} />
               ) : (
-                count.posts
+                count.posts || 0
               )}
               <span className="text-base font-normal">Posts</span>
             </h1>
@@ -165,7 +165,7 @@ function Profile() {
               {count.isFriendsLoading ? (
                 <LoaderCircle className="animate-spin mx-auto" size={20} />
               ) : (
-                count.friends
+                count.friends || 0
               )}
               <span className="text-base font-normal">Friends</span>
             </h1>
@@ -235,9 +235,11 @@ function Profile() {
           />
         </div>
 
-        <Button className="w-full" type="submit" isLoading={isLoading}>
-          Save Changes
-        </Button>
+        {!choosedUserId && (
+          <Button className="w-full" type="submit" isLoading={isLoading}>
+            Save Changes
+          </Button>
+        )}
       </form>
     </Form>
   );
