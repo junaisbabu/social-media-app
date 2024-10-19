@@ -7,6 +7,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -171,12 +172,13 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             </h1>
           </div>
         </div>
-        <div className="w-full grid grid-cols-2 gap-4">
+        <div className="w-full grid grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Full Name"
@@ -193,6 +195,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             name="username"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Username"
@@ -209,6 +212,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             name="email"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Email"
@@ -225,6 +229,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             name="phone_no"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Mobile No</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Phone Number"
@@ -242,6 +247,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             name="location"
             render={({ field }) => (
               <FormItem className="col-span-2">
+                <FormLabel>Location</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Location"
