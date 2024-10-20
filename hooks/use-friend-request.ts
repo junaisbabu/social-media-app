@@ -30,6 +30,22 @@ export const useFriendRequest = () => {
     }
   };
 
+  const handleUnfollowFriend = async (
+    friendDocId: string,
+    friendReqDocId: string
+  ) => {
+    try {
+      await firestoreService.deleteDoc(Collections.FRIENDS, friendDocId);
+      await firestoreService.deleteDoc(
+        Collections.FRIEND_REQUESTS,
+        friendReqDocId
+      );
+    } catch (error) {
+      showErrorToast("Failed to send friend request. Please try again.");
+      console.error("Error sending friend request: " + error);
+    }
+  };
+
   const handleAcceptOrDeclineRequest = async (
     fromUserId: string,
     toUserId: string,
@@ -68,6 +84,7 @@ export const useFriendRequest = () => {
           await firestoreService.addDoc(Collections.FRIENDS, {
             from_user_id: fromUserId,
             to_user_id: toUserId,
+            friend_request_id: requestId,
             timestamp: new Date().toISOString(),
           });
 
@@ -88,5 +105,10 @@ export const useFriendRequest = () => {
     }
   };
 
-  return { isLoading, handleSendFriendRequest, handleAcceptOrDeclineRequest };
+  return {
+    isLoading,
+    handleSendFriendRequest,
+    handleAcceptOrDeclineRequest,
+    handleUnfollowFriend,
+  };
 };

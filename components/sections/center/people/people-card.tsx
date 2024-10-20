@@ -3,12 +3,12 @@
 import { useAuthStore } from "@/components/auth/auth-state";
 import { Button } from "@/components/ui/button";
 import { useFriendRequest } from "@/hooks/use-friend-request";
-import { UserType } from "@/type";
+import { PeopleType } from "@/type";
 import { getUsername } from "@/utils/get-username";
 import Image from "next/image";
 import React from "react";
 
-function PeopleCard({ person }: { person: UserType }) {
+function PeopleCard({ person }: { person: PeopleType }) {
   const { uid, image, name } = person;
   const username = getUsername(name, uid);
 

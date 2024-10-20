@@ -3,13 +3,13 @@
 import { useAuthStore } from "@/components/auth/auth-state";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
-import { FriendRequestStatus, UserType } from "@/type";
+import { FriendRequestStatus, PeopleType, UserType } from "@/type";
 import { and, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export const usePeople = () => {
   const { user } = useAuthStore();
-  const [people, setPeople] = useState<UserType[]>([]);
+  const [people, setPeople] = useState<PeopleType[]>([]);
 
   const getFriendRequests = (currentUserId: string) => {
     const friendRequestsRef = firestoreService.getCollectionRef(
@@ -108,7 +108,9 @@ export const usePeople = () => {
         .filter(
           (doc) => !excludedUserIds.includes(doc.id) && doc.id !== currentUserId
         )
-        .map((doc) => doc.data() as UserType);
+        .map((doc) => {
+          return { doc_id: doc.id, ...(doc.data() as UserType) };
+        });
 
       setPeople(filteredPeople);
     });

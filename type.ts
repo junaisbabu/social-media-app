@@ -50,4 +50,5 @@ export type FriendType = {
 
 export type PeopleType = {
   doc_id: string;
+  friend_request_id?: string;
 } & UserType;

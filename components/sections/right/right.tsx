@@ -3,7 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Request from "./request";
 import { onSnapshot, query, where, and, or } from "firebase/firestore";
-import { FriendRequestStatus, FriendRequestType, UserType } from "@/type";
+import {
+  FriendRequestStatus,
+  FriendRequestType,
+  PeopleType,
+  UserType,
+} from "@/type";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { Collections } from "@/firebase/collections";
 import { firestoreService } from "@/firebase/firestore";
@@ -12,7 +17,7 @@ import { usePeople } from "@/hooks/use-people";
 
 function RightSection() {
   const { user } = useAuthStore();
-  const [friends, setFriends] = useState<UserType[] | []>([]);
+  const [friends, setFriends] = useState<PeopleType[] | []>([]);
   const [recievedRequest, setRecievedRequest] = useState<FriendRequestType[]>(
     []
   );
@@ -32,7 +37,7 @@ function RightSection() {
     );
 
     const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-      let friends: UserType[] = [];
+      let friends: PeopleType[] = [];
 
       for (const doc of querySnapshot.docs) {
         if (doc.data().from_user_id === user?.uid) {
@@ -41,7 +46,11 @@ function RightSection() {
             doc.data().to_user_id
           );
           if (docSnap.exists()) {
-            friends.push(docSnap.data() as UserType);
+            friends.push({
+              ...(docSnap.data() as UserType),
+              doc_id: doc.id,
+              friend_request_id: doc.data().friend_request_id,
+            });
           }
         } else if (doc.data().to_user_id === user?.uid) {
           const docSnap = await firestoreService.getDoc(
@@ -49,7 +58,11 @@ function RightSection() {
             doc.data().from_user_id
           );
           if (docSnap.exists()) {
-            friends.push(docSnap.data() as UserType);
+            friends.push({
+              ...(docSnap.data() as UserType),
+              doc_id: doc.id,
+              friend_request_id: doc.data().friend_request_id,
+            });
           }
         }
       }

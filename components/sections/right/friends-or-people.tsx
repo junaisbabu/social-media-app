@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { UserType } from "@/type";
+import { PeopleType } from "@/type";
 import React from "react";
 import Contact from "./contact/contact";
 import { useAuthStore } from "@/components/auth/auth-state";
@@ -11,7 +11,7 @@ function FriendsOrPeople({
   title,
   noOfUsers,
 }: {
-  users: UserType[];
+  users: PeopleType[];
   title: string;
   noOfUsers: number;
 }) {
@@ -29,7 +29,7 @@ function FriendsOrPeople({
         <CardContent className="p-6 bg-white">
           <ul>
             {users.map(
-              (contact: UserType) =>
+              (contact: PeopleType) =>
                 contact.uid !== user?.uid && (
                   <li key={contact.uid} className="py-2 last:pb-0 first:pt-0">
                     <Contact

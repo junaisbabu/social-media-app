@@ -1,15 +1,19 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserType } from "@/type";
+import { useFriendRequest } from "@/hooks/use-friend-request";
+import { PeopleType } from "@/type";
 import { Ellipsis, MessagesSquare, User, UserRoundX } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-function ContactActions({ user }: { user: UserType }) {
+function ContactActions({ user }: { user: PeopleType }) {
+  const { handleUnfollowFriend } = useFriendRequest();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -24,7 +28,13 @@ function ContactActions({ user }: { user: UserType }) {
         <DropdownMenuItem className="grid grid-cols-[12px_1fr] gap-1 items-center">
           <MessagesSquare size={12} /> Message
         </DropdownMenuItem>
-        <DropdownMenuItem className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center">
+        <DropdownMenuItem
+          className="text-red-500 grid grid-cols-[12px_1fr] gap-1 items-center"
+          onClick={() => {
+            if (user.friend_request_id)
+              handleUnfollowFriend(user.doc_id, user.friend_request_id);
+          }}
+        >
           <UserRoundX size={12} /> Unfollow
         </DropdownMenuItem>
       </DropdownMenuContent>

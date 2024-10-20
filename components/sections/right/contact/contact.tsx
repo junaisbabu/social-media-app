@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { UserType } from "@/type";
+import { PeopleType } from "@/type";
 import React from "react";
 import ContactActions from "./contact-actions";
 import { UserRoundPlus } from "lucide-react";
@@ -13,7 +13,7 @@ function Contact({
   contact,
   isFriend,
 }: {
-  contact: UserType;
+  contact: PeopleType;
   isFriend: boolean;
 }) {
   const { user } = useAuthStore();
