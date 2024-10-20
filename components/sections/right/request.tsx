@@ -47,8 +47,8 @@ function Request({ request }: { request: FriendRequestType }) {
           <Avatar className="w-9 h-9 rounded-xl">
             <AvatarImage src={requestUser?.image} alt={requestUser?.name} />
           </Avatar>
-          <p className="text-[10px] text-zinc-400 flex gap-1 items-baseline">
-            <span className="font-medium text-base text-black">
+          <p className="text-[10px] text-zinc-400 items-baseline inline-block">
+            <span className="font-medium text-base text-black text-nowrap mr-1">
               {requestUser?.name}
             </span>
             wants to add you to friends
