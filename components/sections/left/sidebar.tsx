@@ -7,7 +7,7 @@ import {
   BookMarked,
   SquareUserRound,
   User,
-  Settings,
+  // Settings,
   AppWindow,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,7 +21,7 @@ function Sidebar() {
     { title: "Posts", Icon: AppWindow, url: "/my-posts" },
     { title: "Saved", Icon: BookMarked, url: "/saved" },
     { title: "Profile", Icon: User, url: "/profile" },
-    { title: "Settings", Icon: Settings, url: "/settings" },
+    // { title: "Settings", Icon: Settings, url: "/settings" },
   ];
 
   const pathname = usePathname();
