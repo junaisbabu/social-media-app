@@ -8,6 +8,7 @@ import {
   SquareUserRound,
   User,
   Settings,
+  AppWindow,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,6 +18,7 @@ function Sidebar() {
   const list = [
     { title: "Home", Icon: House, url: "/" },
     { title: "People", Icon: SquareUserRound, url: "/people" },
+    { title: "Posts", Icon: AppWindow, url: "/my-posts" },
     { title: "Saved", Icon: BookMarked, url: "/saved" },
     { title: "Profile", Icon: User, url: "/profile" },
     { title: "Settings", Icon: Settings, url: "/settings" },
