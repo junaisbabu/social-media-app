@@ -143,7 +143,9 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-6 px-1"
       >
-        <h1 className="font-medium">Edit Profile</h1>
+        <h1 className="font-medium text-lg">
+          {choosedUserId ? "Profile" : "Edit Profile"}
+        </h1>
         <div className="w-full grid grid-cols-3 place-items-center gap-4">
           <div>
             <h1 className="font-medium text-2xl p-0 m-0 box-content flex gap-1 items-center">
