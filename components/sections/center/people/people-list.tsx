@@ -10,14 +10,12 @@ function PeopleList() {
   const { people } = usePeople();
 
   return (
-    <div className="h-full w-full rounded-xl pb-14">
-      <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
-        {people.map((person) =>
-          user?.uid !== person.uid ? (
-            <PeopleCard key={person.uid} person={person} />
-          ) : null
-        )}
-      </div>
+    <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
+      {people.map((person) =>
+        user?.uid !== person.uid ? (
+          <PeopleCard key={person.uid} person={person} />
+        ) : null
+      )}
     </div>
   );
 }
