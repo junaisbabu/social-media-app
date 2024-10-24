@@ -102,7 +102,7 @@ function PostCard({ post }: { post: PostType }) {
         </div>
       </CardContent>
       {user ? (
-        <CardFooter className="flex justify-around items-center">
+        <CardFooter className="grid grid-cols-3 place-items-center">
           <div
             className="flex gap-1 items-center cursor-pointer"
             onClick={likePost}
