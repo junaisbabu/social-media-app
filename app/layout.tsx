@@ -4,9 +4,6 @@ import "./globals.css";
 import AuthState from "@/components/auth/auth-state";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
-import Header from "@/components/header";
-import LeftSection from "@/components/sections/left/left";
-import RightSection from "@/components/sections/right/right";
 
 const poppins = Poppins({
   subsets: ["latin"],
