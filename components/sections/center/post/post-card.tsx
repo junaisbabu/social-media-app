@@ -30,30 +30,32 @@ function PostCard({ post }: { post: PostType }) {
   const { showSuccessToast, showErrorToast } = useShowToast();
 
   useEffect(() => {
+    const getUser = async () => {
+      try {
+        const userData = await firestoreService.getDoc(Collections.USERS, uid);
+        if (userData.exists()) {
+          setPostedUser(userData.data() as UserType);
+        } else {
+          showErrorToast("No data available for user with UID:" + uid);
+        }
+      } catch (error) {
+        showErrorToast("Failed to fetch user data. Please try again.");
+        console.error("getUser: Error fetching user data:" + error);
+      }
+    };
+
     getUser();
   }, []);
 
-  if (!user?.uid) return null;
-
-  const getUser = async () => {
-    try {
-      const userData = await firestoreService.getDoc(Collections.USERS, uid);
-      if (userData.exists()) {
-        setPostedUser(userData.data() as UserType);
-      } else {
-        showErrorToast("No data available for user with UID:" + uid);
-      }
-    } catch (error) {
-      showErrorToast("Failed to fetch user data. Please try again.");
-      console.error("getUser: Error fetching user data:" + error);
-    }
-  };
-
   const isLiked = () => {
+    if (!user?.uid) return null;
+
     return likes.includes(user.uid);
   };
 
   const likePost = async () => {
+    if (!user?.uid) return null;
+
     try {
       if (isLiked()) {
         await firestoreService.updateDoc(Collections.POSTS, docId, {
@@ -86,7 +88,7 @@ function PostCard({ post }: { post: PostType }) {
               </span>
             </div>
           </div>
-          <PostActions post={post} />
+          {user ? <PostActions post={post} /> : null}
         </div>
       </CardHeader>
       <CardContent className="p-6 pt-0">
@@ -99,40 +101,44 @@ function PostCard({ post }: { post: PostType }) {
           )}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-around items-center">
-        <div
-          className="flex gap-1 items-center cursor-pointer"
-          onClick={likePost}
-        >
-          <Heart
-            size={20}
-            fill={isLiked() ? "#E31B23" : "#ffffff"}
-            stroke={isLiked() ? "#E31B23" : "#000"}
-          />
-          <span className="text-zinc-400">{post.likes.length}</span>
-        </div>
+      {user ? (
+        <CardFooter className="flex justify-around items-center">
+          <div
+            className="flex gap-1 items-center cursor-pointer"
+            onClick={likePost}
+          >
+            <Heart
+              size={20}
+              fill={isLiked() ? "#E31B23" : "#ffffff"}
+              stroke={isLiked() ? "#E31B23" : "#000"}
+            />
+            <span className="text-zinc-400">{post.likes.length}</span>
+          </div>
 
-        <div className="flex gap-1 items-center">
-          <MessageCircle size={20} />
-          <span className="text-zinc-400">38</span>
-        </div>
-        <Share2
-          size={20}
-          onClick={() => {
-            navigator.clipboard
-              .writeText(`${process.env.NEXT_PUBLIC_DOMAIN}/post/${post.docId}`)
-              .then(() => {
-                showSuccessToast(
-                  "Copied the post link! Feel free to share it!"
-                );
-              })
-              .catch((error) => {
-                console.log("Failed to copy: ", error);
-                showErrorToast("Failed to copy. Please try again.");
-              });
-          }}
-        />
-      </CardFooter>
+          <div className="flex gap-1 items-center">
+            <MessageCircle size={20} />
+            <span className="text-zinc-400">38</span>
+          </div>
+          <Share2
+            size={20}
+            onClick={() => {
+              navigator.clipboard
+                .writeText(
+                  `${process.env.NEXT_PUBLIC_DOMAIN}/post/${post.docId}`
+                )
+                .then(() => {
+                  showSuccessToast(
+                    "Copied the post link! Feel free to share it!"
+                  );
+                })
+                .catch((error) => {
+                  console.log("Failed to copy: ", error);
+                  showErrorToast("Failed to copy. Please try again.");
+                });
+            }}
+          />
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

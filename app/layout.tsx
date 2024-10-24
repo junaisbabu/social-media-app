@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import AuthState from "@/components/auth/auth-state";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +23,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(poppins.className, "bg-[#f4f5f8] h-dvh")}>
         <main className="h-full w-full">{children}</main>
-        <AuthState />
         <Toaster />
       </body>
     </html>

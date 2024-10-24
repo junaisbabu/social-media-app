@@ -3,12 +3,14 @@ import type { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
 export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
   const token = cookies().get("userToken")?.value;
   if (token) {
-    if (request.nextUrl.pathname === "/sign-in") {
+    if (pathname === "/sign-in") {
       return NextResponse.redirect(new URL("/", request.url));
     }
-  } else if (request.nextUrl.pathname !== "/sign-in") {
+  } else if (!pathname.includes("/post/") && pathname !== "/sign-in") {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 }
