@@ -32,7 +32,9 @@ function Header() {
     <header className="w-full h-16 shrink-0 bg-white">
       <div className="w-full h-full max-w-[1360px] px-6 flex shrink-0 justify-between items-center mx-auto">
         <div>
-          <h1 className="font-semibold">Socialo</h1>
+          <Link href="/">
+            <h1 className="font-semibold text-lg">Socialo</h1>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative mr-2">
@@ -70,7 +72,10 @@ function Header() {
               <Link href="/profile">
                 <DropdownMenuItem>View Profile</DropdownMenuItem>
               </Link>
-            <DropdownMenuItem className="text-red-500" onClick={handleSignOut}>
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={handleSignOut}
+              >
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
