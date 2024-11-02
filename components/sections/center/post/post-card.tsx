@@ -1,16 +1,14 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { PostType, UserType } from "@/type";
+import { PostType } from "@/type";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 import { firestoreService } from "@/firebase/firestore";
 import { Collections } from "@/firebase/collections";
 import dayjs from "dayjs";
@@ -18,34 +16,16 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuthStore } from "@/components/auth/auth-state";
 import { useShowToast } from "@/hooks/useShowToast";
+import PostInfo from "./post-info";
 import PostActions from "./post-actions";
 
 dayjs.extend(relativeTime);
 
 function PostCard({ post }: { post: PostType }) {
   const { user } = useAuthStore();
-  const [postedUser, setPostedUser] = useState<UserType>();
-  const { uid, text, file, created_at, docId, likes } = post;
+  const { text, file, docId, likes } = post;
 
   const { showSuccessToast, showErrorToast } = useShowToast();
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const userData = await firestoreService.getDoc(Collections.USERS, uid);
-        if (userData.exists()) {
-          setPostedUser(userData.data() as UserType);
-        } else {
-          showErrorToast("No data available for user with UID:" + uid);
-        }
-      } catch (error) {
-        showErrorToast("Failed to fetch user data. Please try again.");
-        console.error("getUser: Error fetching user data:" + error);
-      }
-    };
-
-    getUser();
-  }, []);
 
   const isLiked = () => {
     if (!user?.uid) return null;
@@ -75,19 +55,7 @@ function PostCard({ post }: { post: PostType }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div className="flex gap-2 items-center">
-            <Avatar className="w-9 h-9 rounded-xl">
-              <AvatarImage src={postedUser?.image} alt={postedUser?.name} />
-            </Avatar>
-            <div className="flex flex-col">
-              <h1 className="font-medium">{postedUser?.name}</h1>
-              <span className="text-[10px] text-zinc-400">
-                {`${dayjs(created_at).fromNow()} ${
-                  post?.modified_at ? "(edited)" : ""
-                }`}
-              </span>
-            </div>
-          </div>
+          <PostInfo post={post} />
           {user ? <PostActions post={post} /> : null}
         </div>
       </CardHeader>
