@@ -7,7 +7,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <AuthState />
-      <div className="min-w-full min-h-screen flex flex-row gap-4 items-center justify-evenly">
+      <div className="min-w-full min-h-screen flex flex-col md:flex-row gap-4 items-center justify-evenly">
         <Image src={AuthenticationCuate} alt="Authentication" />
         <div className="max-w-xl">{children}</div>
       </div>
