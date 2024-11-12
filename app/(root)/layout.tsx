@@ -1,6 +1,7 @@
 import AuthState from "@/components/auth/auth-state";
 import Header from "@/components/header";
 import LeftSection from "@/components/sections/left/left";
+import Sidebar from "@/components/sections/left/sidebar";
 import RightSection from "@/components/sections/right/right";
 import React from "react";
 
@@ -16,6 +17,9 @@ function Layout({ children }: { children: React.ReactNode }) {
             {children}
           </div>
           <RightSection />
+        </div>
+        <div className="md:hidden">
+          <Sidebar />
         </div>
       </div>
     </>
