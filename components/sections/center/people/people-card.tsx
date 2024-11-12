@@ -19,7 +19,7 @@ function PeopleCard({ person }: { person: PeopleType }) {
   if (!user) return null;
 
   return (
-    <div className="w-40 h-fit bg-white rounded-xl overflow-hidden p-4">
+    <div className="w-full max-w-56 h-fit bg-white rounded-xl overflow-hidden p-4">
       <div className="relative w-[100px] h-[100px] mx-auto rounded-sm overflow-hidden">
         <Image className="object-cover" src={image} alt={name} fill />
       </div>
