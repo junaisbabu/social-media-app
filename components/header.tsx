@@ -30,7 +30,7 @@ function Header() {
 
   return (
     <header className="w-full h-16 shrink-0 bg-white">
-      <div className="w-full h-full max-w-[1360px] px-6 flex shrink-0 gap-4 justify-between items-center mx-auto">
+      <div className="w-full h-full max-w-[1360px] px-4 md:px-6 flex shrink-0 gap-4 justify-between items-center mx-auto">
         <div>
           <Link href="/">
             <h1 className="font-semibold text-base md:text-lg">Socialo</h1>
