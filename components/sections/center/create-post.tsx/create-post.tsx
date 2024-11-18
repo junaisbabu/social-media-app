@@ -103,77 +103,80 @@ function CreatePost() {
     <div className="p-3 bg-white rounded-xl space-y-4">
       <Form {...form}>
         <form
-          className="flex items-center gap-2"
+          className="flex flex-col sm:flex-row items-center gap-2"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Avatar className="w-9 h-9 rounded-xl">
-            <AvatarImage
-              src={user?.photoURL || "https://github.com/shadcn.png"}
-              alt={user?.displayName || "Anonymous"}
-            />
-          </Avatar>
-          <div className="relative flex-1">
-            {!file && (
-              <>
-                <ImagePlus className="absolute top-2.5 right-2" size={20} />
-                <FormField
-                  control={form.control}
-                  name="file"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          className="w-9 h-9 absolute right-0 opacity-0"
-                          type="file"
-                          accept="image/*"
-                          multiple={false}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        const file = e.target.files ? e.target.files[0] : null;
-                            field.onChange(file);
-                          }}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-            <FormField
-              control={form.control}
-              name="text"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      className="border-none resize-none min-h-9 max-h-9 pr-10"
-                      placeholder="What's on your mind?"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
+          <div className="flex gap-2 w-full">
+            <Avatar className="w-9 h-9 rounded-xl">
+              <AvatarImage
+                src={user?.photoURL || "https://github.com/shadcn.png"}
+                alt={user?.displayName || "Anonymous"}
+              />
+            </Avatar>
+            <div className="relative flex-1">
+              {!file && (
+                <>
+                  <ImagePlus className="absolute top-2.5 right-2" size={20} />
+                  <FormField
+                    control={form.control}
+                    name="file"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            className="w-9 h-9 absolute right-0 opacity-0"
+                            type="file"
+                            accept="image/*"
+                            multiple={false}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                              const file = e.target.files
+                                ? e.target.files[0]
+                                : null;
+                              field.onChange(file);
+                            }}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </>
               )}
-            />
-          </div>
-
-          {file && (
-            <div className="w-9 h-9 relative rounded-lg overflow-hidden hover:bg-red-500 group">
-              <div
-                className="text-white hidden group-hover:flex cursor-pointer w-full h-full items-center justify-center"
-                onClick={() => form.setValue("file", null)}
-              >
-                <Trash2 />
-              </div>
-              <Image
-                className="object-contain group-hover:hidden"
-                src={URL.createObjectURL(file as Blob)}
-                alt={file.name}
-                fill
+              <FormField
+                control={form.control}
+                name="text"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        className="border-none resize-none min-h-9 max-h-9 pr-10"
+                        placeholder="What's on your mind?"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
             </div>
-          )}
 
+            {file && (
+              <div className="w-9 h-9 relative rounded-lg overflow-hidden hover:bg-red-500 group">
+                <div
+                  className="text-white hidden group-hover:flex cursor-pointer w-full h-full items-center justify-center"
+                  onClick={() => form.setValue("file", null)}
+                >
+                  <Trash2 />
+                </div>
+                <Image
+                  className="object-contain group-hover:hidden"
+                  src={URL.createObjectURL(file as Blob)}
+                  alt={file.name}
+                  fill
+                />
+              </div>
+            )}
+          </div>
           <Button
-            className="rounded-xl min-w-[87px]"
+            className="w-full sm:w-auto rounded-xl min-w-[87px]"
             type="submit"
             disabled={isLoading}
             isLoading={isLoading}

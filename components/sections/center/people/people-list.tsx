@@ -10,7 +10,7 @@ function PeopleList() {
   const { people } = usePeople();
 
   return (
-    <div className="h-full w-full flex flex-row flex-wrap justify-center gap-6 overflow-y-auto no-scrollbar">
+    <div className="h-fit w-full grid place-items-center grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 pb-6 overflow-y-auto no-scrollbar">
       {people.map((person) =>
         user?.uid !== person.uid ? (
           <PeopleCard key={person.uid} person={person} />

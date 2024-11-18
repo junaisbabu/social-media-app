@@ -53,13 +53,13 @@ function PostCard({ post }: { post: PostType }) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-2 md:p-4">
         <div className="flex items-center justify-between">
           <PostInfo post={post} />
           {user ? <PostActions post={post} /> : null}
         </div>
       </CardHeader>
-      <CardContent className="p-6 pt-0">
+      <CardContent className="px-4 pb-2 md:px-6 md:pb-4 pt-0">
         <div className="space-y-3">
           <p className="leading-6">{text}</p>
           {file && (

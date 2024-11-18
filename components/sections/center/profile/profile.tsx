@@ -141,7 +141,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 px-1"
+        className="w-full space-y-6 px-1 pb-6"
       >
         <h1 className="font-medium text-lg">
           {choosedUserId ? "Profile" : "Edit Profile"}
@@ -174,7 +174,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             </h1>
           </div>
         </div>
-        <div className="w-full grid grid-cols-2 gap-6">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="name"
@@ -232,7 +232,7 @@ function Profile({ choosedUserId }: { choosedUserId?: string }) {
             control={form.control}
             name="location"
             render={({ field }) => (
-              <FormItem className="col-span-2">
+              <FormItem className="sm:col-span-2">
                 <FormLabel>Location</FormLabel>
                 <FormControl>
                   <Input readOnly={!!choosedUserId} {...field} />
